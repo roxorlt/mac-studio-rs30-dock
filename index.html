@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>StudioBeam DuoDock V2 — M5 Mac Studio × 极米 RS30 交互式 3D 支架坞工作台</title>
-  <meta name="description" content="V2 承重与全向防干涉核准版：专为 Apple M5 Mac Studio 与 极米 RS30 (5.4kg) 定制的参数化 3D 打印支架坞交互预览、STL 导出与代打成本评估" />
+  <title>StudioBeam DuoDock V3 — M5 Mac Studio × 极米 RS30 前推滑轨式 3D 支架坞工作台</title>
+  <meta name="description" content="V3 前推滑入式导轨机舱版：无需搬动上方 5.4kg 极米 RS30，Mac Studio 可直接从正前方水平推入/抽出；含 16mm 承重桥、背口 100% 无遮挡与 360° 防干涉校验" />
   
   <style>
     :root {
@@ -138,14 +138,14 @@
     <header class="flex flex-wrap items-center justify-between gap-3 px-4 py-3 rounded-xl bg-[var(--card)] border border-[var(--border)]">
       <div class="flex items-center gap-3">
         <div class="w-9 h-9 rounded-lg bg-[var(--secondary)] border border-[var(--border)] flex items-center justify-center font-mono text-xs font-bold text-[var(--primary)]">
-          V2
+          V3
         </div>
         <div>
           <h1 class="text-sm md:text-base font-semibold tracking-tight leading-snug">
-            StudioBeam DuoDock V2 · M5 Mac Studio × 极米 RS30 承重与防干涉强化版
+            StudioBeam DuoDock V3 · 前推滑入式导轨机舱 + 5.4kg 重载防干涉支架坞
           </h1>
           <p class="text-xs text-[var(--muted-foreground)]">
-            5.4kg 承重强化 (16mm 实厚桥板+7.5mm 立柱) · 侧挂电源舱解放 Mac 背部全部接口 · Ø333mm 360°回转包络零干涉校验
+            正面 199.4mm 全宽敞开滑轨舱门（Mac 水平推入/抽出免拆顶盘）· 后柱 R31.6 圆角靠山自限位 · 16mm 实心承重桥 · 360° 零干涉
           </p>
         </div>
       </div>
@@ -155,10 +155,10 @@
           ✓ 2-Manifold 水密实体
         </span>
         <span id="bedFitBadge" class="px-2.5 py-1 rounded-md bg-[var(--secondary)] border border-[var(--border)] font-mono">
-          ✓ 适配 256mm 拓竹盘 (214.4mm)
+          ✓ 适配 256mm 拓竹盘 (215.4mm)
         </span>
         <button id="btnQuickExportZip" class="px-3 py-1.5 rounded-md bg-[var(--primary)] text-[var(--primary-foreground)] font-medium hover:opacity-90 transition cursor-pointer">
-          ⬇ 一键打包下载 V2 STL (.ZIP)
+          ⬇ 一键打包下载 V3 STL (.ZIP)
         </button>
         <button type="button" onclick="document.documentElement.classList.toggle('light')" class="px-2.5 py-1.5 rounded-md bg-[var(--secondary)] border border-[var(--border)] cursor-pointer">☀/🌙 主题</button>
         <button id="btnSaveOfflineHtml" class="px-3 py-1.5 rounded-md bg-[var(--secondary)] border border-[var(--border)] font-medium hover:opacity-90 transition cursor-pointer">
@@ -175,11 +175,11 @@
           <div class="flex flex-wrap items-center gap-1">
             <span class="text-[var(--muted-foreground)] mr-1">视角:</span>
             <button data-cam="iso" class="cam-btn px-2 py-1 rounded bg-[var(--secondary)] hover:opacity-80 transition cursor-pointer font-medium">等轴测</button>
-            <button data-cam="front" class="cam-btn px-2 py-1 rounded hover:bg-[var(--secondary)] transition cursor-pointer">正视 (前接口)</button>
-            <button data-cam="back" class="cam-btn px-2 py-1 rounded hover:bg-[var(--secondary)] transition cursor-pointer">背视 (Mac背口100%无遮挡)</button>
+            <button data-cam="front" class="cam-btn px-2 py-1 rounded hover:bg-[var(--secondary)] transition cursor-pointer">正视 (199.4mm前滑轨舱门)</button>
+            <button data-cam="back" class="cam-btn px-2 py-1 rounded hover:bg-[var(--secondary)] transition cursor-pointer">背视 (153.8mm背口+后靠山)</button>
             <button data-cam="side" class="cam-btn px-2 py-1 rounded hover:bg-[var(--secondary)] transition cursor-pointer">侧视 (侧挂电源舱)</button>
             <button data-cam="top" class="cam-btn px-2 py-1 rounded hover:bg-[var(--secondary)] transition cursor-pointer">俯视 (360°回转包络圈)</button>
-            <button data-cam="bottom" class="cam-btn px-2 py-1 rounded hover:bg-[var(--secondary)] transition cursor-pointer">仰视 (进风口/45°免支撑槽)</button>
+            <button data-cam="bottom" class="cam-btn px-2 py-1 rounded hover:bg-[var(--secondary)] transition cursor-pointer">仰视 (底部滑轨/45°免支撑槽)</button>
           </div>
           <div class="text-[var(--muted-foreground)] hidden sm:block">
             左键旋转 · 右键/Shift 平移 · 滚轮缩放
@@ -192,21 +192,22 @@
 
           <div class="absolute top-3 left-3 p-2.5 rounded-lg bg-[var(--card)]/90 backdrop-blur border border-[var(--border)] text-xs space-y-1 pointer-events-none max-w-[300px]">
             <div class="font-semibold flex items-center justify-between gap-3">
-              <span id="hudSchemeTitle">方案 A (V2) · 立式双层侧挂电源坞</span>
+              <span id="hudSchemeTitle">方案 A (V3) · 前推滑轨双层侧挂电源坞</span>
             </div>
             <div id="hudEnvelope" class="font-mono text-[var(--muted-foreground)]">
-              占地: 276 × 214 mm | 背部接线净空: ∞ 全敞开
+              前舱门净宽: 199.4 mm (&gt;Mac 197mm)
             </div>
             <div id="hudClearanceStatus" class="text-[var(--success)] font-medium">
-              ✓ 5.4kg 承重挠度 &lt;0.05mm · 360°回转 0 干涉
+              ✓ 免拆上方 5.4kg 投影仪 · Mac 正面水平直推入舱
             </div>
           </div>
 
           <div class="absolute bottom-3 left-3 px-2.5 py-2 rounded-lg bg-[var(--card)]/90 backdrop-blur border border-[var(--border)] text-xs flex flex-wrap items-center gap-x-3 gap-y-1 pointer-events-none">
-            <span class="flex items-center gap-1.5"><i class="w-2.5 h-2.5 rounded-sm inline-block" style="background:#3b82f6"></i>V2 强化打印坞</span>
+            <span class="flex items-center gap-1.5"><i class="w-2.5 h-2.5 rounded-sm inline-block" style="background:#3b82f6"></i>V3 前推滑轨坞</span>
             <span class="flex items-center gap-1.5"><i class="w-2.5 h-2.5 rounded-sm inline-block" style="background:#cbd5e1"></i>M5 Mac Studio</span>
             <span class="flex items-center gap-1.5"><i class="w-2.5 h-2.5 rounded-sm inline-block" style="background:#64748b"></i>极米 RS30 (5.4kg)</span>
-            <span class="flex items-center gap-1.5"><i class="w-2.5 h-2.5 rounded-full inline-block" style="background:#a855f7"></i>Ø333mm 360°防干涉包络圆</span>
+            <span class="flex items-center gap-1.5"><i class="w-2.5 h-2.5 rounded-full inline-block" style="background:#f59e0b"></i>8.5mm 双侧水平植绒滑轨</span>
+            <span class="flex items-center gap-1.5"><i class="w-2.5 h-2.5 rounded-full inline-block" style="background:#a855f7"></i>Ø333mm 360°防干涉圆</span>
           </div>
         </div>
 
@@ -225,7 +226,7 @@
           </label>
           <label class="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[var(--secondary)] border border-[var(--border)] cursor-pointer">
             <input id="chkDims" type="checkbox" checked class="accent-[var(--primary)]" />
-            <span>尺寸标注</span>
+            <span>滑轨与尺寸标注</span>
           </label>
           <label class="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[var(--secondary)] border border-[var(--border)] cursor-pointer">
             <input id="chkBeam" type="checkbox" checked class="accent-[var(--primary)]" />
@@ -249,41 +250,61 @@
       <!-- Right: Control & Engineering Sidebar (4 cols) -->
       <aside class="lg:col-span-4 rounded-xl bg-[var(--card)] border border-[var(--border)] overflow-hidden flex flex-col">
         <div class="grid grid-cols-3 border-b border-[var(--border)] text-xs font-medium">
-          <button data-tab="design" class="tab-btn py-2.5 border-b-2 border-[var(--primary)] text-[var(--foreground)] cursor-pointer">1. 拓扑与防干涉</button>
+          <button data-tab="design" class="tab-btn py-2.5 border-b-2 border-[var(--primary)] text-[var(--foreground)] cursor-pointer">1. 滑轨入舱与防干涉</button>
           <button data-tab="export" class="tab-btn py-2.5 border-b-2 border-transparent text-[var(--muted-foreground)] cursor-pointer">2. 承重与STL导出</button>
           <button data-tab="cost" class="tab-btn py-2.5 border-b-2 border-transparent text-[var(--muted-foreground)] cursor-pointer">3. 材料强度与报价</button>
         </div>
 
-        <!-- TAB 1: Design, Kinematics & Clearance -->
-        <div id="tab-design" class="tab-pane p-3.5 space-y-3.5 text-xs max-h-[540px] overflow-y-auto thin-scroll">
+        <!-- TAB 1: Design, Front Slide-In Kinematics & Clearance -->
+        <div id="tab-design" class="tab-pane p-3.5 space-y-3 text-xs max-h-[540px] overflow-y-auto thin-scroll">
+          <!-- Highlighted V3 Front Slide-In Demo Box -->
+          <div class="p-2.5 rounded-lg bg-[var(--secondary)] border border-[var(--primary)] space-y-2">
+            <div class="flex items-center justify-between gap-2">
+              <span class="font-semibold text-[var(--foreground)]">🎯 V3 重点升级：Mac 正面水平推入/抽出</span>
+              <button id="btnPlaySlide" class="px-2 py-1 rounded bg-[var(--primary)] text-[var(--primary-foreground)] font-medium hover:opacity-90 transition cursor-pointer shrink-0">
+                ▶ 自动演示推入/抽出
+              </button>
+            </div>
+            <div>
+              <div class="flex justify-between mb-1">
+                <span>拖动滑块看 Mac 沿导轨进出 (上方 RS30 免拆不动)</span>
+                <span id="valMacSlide" class="font-mono font-semibold text-[var(--primary)]">已推入锁止 (0mm)</span>
+              </div>
+              <input id="rngMacSlide" type="range" min="0" max="100" value="0" class="w-full accent-[var(--primary)]" />
+            </div>
+            <p class="text-[var(--muted-foreground)] leading-snug">
+              前立柱外移让出 <strong>199.4mm 全宽直通门</strong>（底脚通道 182.4mm &gt; Ø179.2mm 圆底座），沿左右 8.5mm 植绒滑轨平推到底即贴合后方 <strong>R31.6 圆角靠山</strong> 自动居中！
+            </p>
+          </div>
+
           <div class="space-y-1.5">
-            <div class="font-semibold text-[var(--foreground)]">切换 V2 防干涉包裹布局</div>
+            <div class="font-semibold text-[var(--foreground)]">切换 V3 滑轨包裹布局</div>
             <div class="grid grid-cols-1 gap-1.5">
-              <button data-scheme="tower_full" class="scheme-btn text-left p-2.5 rounded-lg border border-[var(--primary)] bg-[var(--secondary)] cursor-pointer transition">
+              <button data-scheme="tower_full" class="scheme-btn text-left p-2 rounded-lg border border-[var(--primary)] bg-[var(--secondary)] cursor-pointer transition">
                 <div class="font-semibold flex justify-between">
-                  <span>方案 A (推荐) · 立式承重塔 + 侧挂电源舱</span>
-                  <span class="font-mono text-[var(--primary)]">背口0遮挡</span>
+                  <span>方案 A (推荐) · 前推滑轨承重塔 + 侧挂电源舱</span>
+                  <span class="font-mono text-[var(--primary)]">正面直推</span>
                 </div>
                 <div class="text-[var(--muted-foreground)] mt-0.5">
-                  300W 电源舱移至 Mac 空白左/右侧壁 (高度102mm，低于RS30底面45mm)；Mac 背面雷雳5/电源线/散热孔 100% 敞开直插。
+                  Mac 正面水平抽拉免动 5.4kg RS30；300W 电源舱挂左/右侧空白壁，背面 153.8mm 窗口全敞开。
                 </div>
               </button>
-              <button data-scheme="tower_slim" class="scheme-btn text-left p-2.5 rounded-lg border border-[var(--border)] hover:bg-[var(--secondary)] cursor-pointer transition">
+              <button data-scheme="tower_slim" class="scheme-btn text-left p-2 rounded-lg border border-[var(--border)] hover:bg-[var(--secondary)] cursor-pointer transition">
                 <div class="font-semibold flex justify-between">
-                  <span>方案 B · 立式极简双件塔 (电源砖藏桌下)</span>
-                  <span class="font-mono">214×214 mm</span>
+                  <span>方案 B · 前推滑轨极简双件塔 (电源砖藏桌下)</span>
+                  <span class="font-mono">215×215 mm</span>
                 </div>
                 <div class="text-[var(--muted-foreground)] mt-0.5">
-                  仅底座+16mm厚加筋云台顶盘，四角下沉避让，RS30 360°旋转与俯仰全自由。
+                  仅 V3 前滑轨底座 + 16mm 承重云台顶盘，桌面极度克制。
                 </div>
               </button>
-              <button data-scheme="side_by_side" class="scheme-btn text-left p-2.5 rounded-lg border border-[var(--border)] hover:bg-[var(--secondary)] cursor-pointer transition">
+              <button data-scheme="side_by_side" class="scheme-btn text-left p-2 rounded-lg border border-[var(--border)] hover:bg-[var(--secondary)] cursor-pointer transition">
                 <div class="font-semibold flex justify-between">
-                  <span>方案 C (V2修正间距) · 并排低趴双坞</span>
-                  <span class="font-mono">轴距 294mm</span>
+                  <span>方案 C · 295mm 宽轴距防撞并排坞</span>
+                  <span class="font-mono">净留+20.8mm</span>
                 </div>
                 <div class="text-[var(--muted-foreground)] mt-0.5">
-                  针对 RS30 Ø333mm (R166.5) 最大对角回转半径，将双坞中心距拉宽至 294mm，360°旋转留出 +20.3mm 净安全间隙！
+                  Mac 可正面平推也可顶部直放；双坞轴距 295mm 避开 RS30 Ø333mm 旋转半径。
                 </div>
               </button>
             </div>
@@ -297,10 +318,10 @@
             </select>
           </div>
 
-          <div class="space-y-2.5 pt-2 border-t border-[var(--border)]">
-            <div class="font-semibold">动态拆解与 360°×135° 干涉实测</div>
+          <div class="space-y-2 pt-2 border-t border-[var(--border)]">
+            <div class="font-semibold">其他自由度与防干涉实测</div>
             <div>
-              <div class="flex justify-between mb-1"><span>模块爆炸拆解</span><span id="valExplode" class="font-mono text-[var(--primary)]">0%</span></div>
+              <div class="flex justify-between mb-1"><span>模块垂直爆炸拆解</span><span id="valExplode" class="font-mono text-[var(--primary)]">0%</span></div>
               <input id="rngExplode" type="range" min="0" max="100" value="0" class="w-full accent-[var(--primary)]" />
             </div>
             <div>
@@ -317,18 +338,18 @@
             </div>
           </div>
 
-          <div class="space-y-2.5 pt-2 border-t border-[var(--border)]">
+          <div class="space-y-2 pt-2 border-t border-[var(--border)]">
             <div class="flex items-center justify-between">
-              <span class="font-semibold">结构参数微调 (实时重算 STL)</span>
-              <button id="btnResetParams" class="text-[var(--primary)] hover:underline cursor-pointer">恢复 V2 标准值</button>
+              <span class="font-semibold">结构参数微调 (实时重算 V3 STL)</span>
+              <button id="btnResetParams" class="text-[var(--primary)] hover:underline cursor-pointer">恢复 V3 标准值</button>
             </div>
             <div>
-              <div class="flex justify-between mb-1"><span>Mac 内衬单边间隙 (含1mm植绒条)</span><span id="valClearance" class="font-mono">1.2 mm</span></div>
-              <input id="rngClearance" type="range" min="0.4" max="2.5" step="0.1" value="1.2" class="w-full accent-[var(--primary)]" />
+              <div class="flex justify-between mb-1"><span>Mac 舱门单边滑入余量 (含植绒防刮条)</span><span id="valClearance" class="font-mono">1.2 mm</span></div>
+              <input id="rngClearance" type="range" min="0.5" max="2.5" step="0.1" value="1.2" class="w-full accent-[var(--primary)]" />
             </div>
             <div>
-              <div class="flex justify-between mb-1"><span>承重外骨骼立柱壁厚</span><span id="valWall" class="font-mono">7.5 mm</span></div>
-              <input id="rngWall" type="range" min="6.0" max="10.0" step="0.5" value="7.5" class="w-full accent-[var(--primary)]" />
+              <div class="flex justify-between mb-1"><span>承重外骨骼立柱壁厚</span><span id="valWall" class="font-mono">8.0 mm</span></div>
+              <input id="rngWall" type="range" min="6.5" max="10.0" step="0.5" value="8.0" class="w-full accent-[var(--primary)]" />
             </div>
             <div>
               <div class="flex justify-between mb-1"><span>顶盘实心承重桥厚</span><span id="valDeckH" class="font-mono">16.0 mm</span></div>
@@ -340,18 +361,18 @@
         <!-- TAB 2: Load Engineering & STL Export -->
         <div id="tab-export" class="tab-pane hidden p-3.5 space-y-3 text-xs max-h-[540px] overflow-y-auto thin-scroll">
           <div class="p-2.5 rounded-lg bg-[var(--secondary)] border border-[var(--border)] space-y-1 leading-relaxed">
-            <div class="font-semibold text-[var(--foreground)]">V2 结构力学核算 (极米 RS30 实重 5.3–5.4 kg)</div>
+            <div class="font-semibold text-[var(--foreground)]">V3 滑轨机舱与 5.4kg 承重核验</div>
             <ul class="list-disc pl-4 text-[var(--muted-foreground)] space-y-0.5">
-              <li><strong>立柱抗压/屈曲</strong>：四角 7.5mm 弧形L柱总截面积 &gt;2,080mm²，5.4kg 压应力仅 0.05MPa，屈曲极限 &gt;800kg。</li>
-              <li><strong>顶盘抗弯/抗蠕变</strong>：实心桥板由 8mm 增厚至 <strong>16.0mm</strong>（抗弯刚度 EI 提升 <strong>8倍</strong>），PETG 长期静载中心挠度 &lt;0.05mm。</li>
-              <li><strong>真·零支撑平打</strong>：顶盘底面 96% 平贴热床，4个榫槽与手拧螺孔均采用 <strong>45°自支撑斜顶</strong>，绝无悬空塌丝。</li>
+              <li><strong>正面无障碍滑入</strong>：前门净宽 <strong>199.4mm</strong> (&gt;197mm 机身)，下层底脚通道 <strong>182.4mm</strong> (&gt;Ø179.2mm 圆底脚)，底梁高 6mm 低于底脚 12mm 绝不磕碰。</li>
+              <li><strong>后方自居中靠山 + 全露接口</strong>：后双柱保留 22.8mm 宽 R31.6 弧形限位挡边，中间留出 <strong>153.8mm</strong> 敞口，雷雳5/电源插口/角落开机键 100% 裸露。</li>
+              <li><strong>5.4kg 零支撑承重</strong>：8mm 厚四柱 + 16mm 实心顶板（刚度 8×），全部 Z=0 平铺零支撑直打。</li>
             </ul>
           </div>
 
           <div id="stlPartCards" class="space-y-2"></div>
 
           <button id="btnExportZipTab" class="w-full py-2.5 rounded-lg bg-[var(--primary)] text-[var(--primary-foreground)] font-semibold hover:opacity-90 transition cursor-pointer">
-            ⬇ 打包下载全套 V2 STL + 工艺说明 (.ZIP)
+            ⬇ 打包下载全套 V3 STL + 工艺说明 (.ZIP)
           </button>
         </div>
 
@@ -377,11 +398,11 @@
 
           <div class="p-3 rounded-xl bg-[var(--secondary)] border border-[var(--border)] space-y-2">
             <div class="flex items-baseline justify-between">
-              <span class="text-[var(--muted-foreground)]">V2 强化版全套总价预估</span>
-              <span id="costRangeText" class="text-lg font-bold font-mono text-[var(--primary)]">¥165 – ¥250</span>
+              <span class="text-[var(--muted-foreground)]">V3 前滑轨版全套总价预估</span>
+              <span id="costRangeText" class="text-lg font-bold font-mono text-[var(--primary)]">¥145 – ¥225</span>
             </div>
             <div class="grid grid-cols-2 gap-2 pt-1 border-t border-[var(--border)] text-[var(--muted-foreground)]">
-              <div>30%填充实重: <strong id="costWeightText" class="text-[var(--foreground)] font-mono">855 g</strong></div>
+              <div>30%填充实重: <strong id="costWeightText" class="text-[var(--foreground)] font-mono">759 g</strong></div>
               <div>承重安全系数: <strong id="costSfText" class="text-[var(--success)] font-mono">&gt; 28× (5.4kg无忧)</strong></div>
             </div>
             <p id="costAdviceText" class="text-[var(--muted-foreground)] leading-relaxed pt-1"></p>
@@ -389,7 +410,7 @@
 
           <div class="space-y-1.5">
             <div class="flex items-center justify-between">
-              <span class="font-semibold">发给代打店家的承重加强切片嘱咐</span>
+              <span class="font-semibold">发给代打店家的 V3 切片嘱咐</span>
               <button id="btnCopyOrderNote" class="px-2 py-1 rounded bg-[var(--primary)] text-[var(--primary-foreground)] hover:opacity-90 cursor-pointer transition">
                 复制下单话术
               </button>
@@ -403,27 +424,27 @@
     <!-- Bottom Engineering Verification Summary -->
     <section class="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs">
       <div class="p-3 rounded-xl bg-[var(--card)] border border-[var(--border)] space-y-1">
-        <div class="font-semibold">1. 5.4kg 承重与防蠕变强化</div>
+        <div class="font-semibold">1. V3 正面水平推入/抽出机舱</div>
         <p class="text-[var(--muted-foreground)] leading-relaxed">
-          极米 RS30 实重 5.3–5.4kg。V2 将四角立柱加厚至 7.5mm，顶盘实心承重桥由 8mm 增至 16mm（抗弯刚度提升 8 倍），配合 4 层壁厚 + 30% Gyroid 填充，长期热态静载变形 &lt;0.05mm。
+          旧版四角内包立柱在盖上顶板并锁紧 5.4kg 投影仪后会将 Mac 困在笼中。V3 将两根前立柱外扩为 199.4mm 直通龙门架 + 双侧 8.5mm 水平植绒滑轨，Mac 随时像磁带一样从正面平推进出！
         </p>
       </div>
       <div class="p-3 rounded-xl bg-[var(--card)] border border-[var(--border)] space-y-1">
-        <div class="font-semibold">2. 背部 Mac 接口 100% 零遮挡</div>
+        <div class="font-semibold">2. 后圆角自居中靠山 + 全露接口</div>
         <p class="text-[var(--muted-foreground)] leading-relaxed">
-          V2 将 RS30 的 300W 电源砖舱移至 Mac Studio 无孔无接口的左/右侧壁，让 Mac 背部 4×雷雳5、HDMI、万兆网口、粗电源线与 4000+ 排风孔拥有无限直插净空。
+          两根后立柱保留 R31.6 弧形内包角作为推入终点的物理限位挡块，自动将 Mac 定位于正中心；后窗净宽达 153.8mm，完整露出背部 136.2mm 平直接口区与边角电源键。
         </p>
       </div>
       <div class="p-3 rounded-xl bg-[var(--card)] border border-[var(--border)] space-y-1">
-        <div class="font-semibold">3. 全方案 360° 回转包络校验</div>
+        <div class="font-semibold">3. 5.4kg 重载与 360° 防干涉</div>
         <p class="text-[var(--muted-foreground)] leading-relaxed">
-          RS30 最大对角回转半径 R=166.5mm (Ø333mm)。方案 A/B 顶盘四角做下沉阶梯避让 U 型臂且高于侧电源舱 45mm；方案 C 双坞轴距拉宽至 294mm，净留 +20.3mm 防撞间隙。
+          8.0mm 立柱壁厚 + 16.0mm 实心承重顶板（抗弯刚度 8×），承载 5.4kg RS30 挠度 &lt;0.05mm；侧置电源舱与 295mm 并排轴距确保 Ø333mm 360° 旋转零磕碰。
         </p>
       </div>
       <div class="p-3 rounded-xl bg-[var(--card)] border border-[var(--border)] space-y-1">
-        <div class="font-semibold">4. 报价档位与承重的关系</div>
+        <div class="font-semibold">4. 滑轨防刮贴条小技巧</div>
         <p class="text-[var(--muted-foreground)] leading-relaxed">
-          材料决定抗蠕变上限（禁选PLA；优选 PETG 或刚性高 65% 的 PETG-CF）；而同为 PETG 时，农场(¥90+)与嘉立创(¥250+)强度接近，差价主要在平台按体积计价与工业质检。
+          组装时在左右两条 Z=26mm 水平滑轨顶面与两侧立柱内壁贴上 0.8–1.0mm 自粘黑色植绒布胶条，Mac 推入阻尼顺滑如丝，绝不留任何金属划痕。
         </p>
       </div>
     </section>
@@ -434,19 +455,21 @@
     "use strict";
 
     const DEFAULTS = {
-      macW: 197.0, macBodyH: 87.0, macFootH: 8.0, macCornerR: 30.4,
+      macW: 197.0, macBodyH: 87.0, macFootH: 8.0, macCornerR: 30.4, macIntakeD: 179.2,
       rs30SweptR: 166.5, rs30BoltD: 7.0,
       brickW: 188.0, brickT: 44.0, brickH: 92.0,
-      macClearance: 1.2, intakeHoleD: 182.0, wallThickness: 7.5, baseRingH: 6.0,
+      macClearance: 1.2, railInnerHalf: 91.2, wallThickness: 8.0, baseRingH: 6.0,
       shelfZ: 26.0, airGapAboveMac: 18.0, tenonH: 8.0, tenonInset: 1.9, tenonTol: 0.25,
-      deckSeatZ: 16.0, rs30SeatD: 198.4, rs30LipOuterD: 207.0, sideBySideDx: 294.0,
-      nAngles: 144, cornerHalfSteps: 8,
+      deckSeatZ: 16.0, rs30SeatD: 198.4, rs30LipOuterD: 207.0, sideBySideDx: 295.0,
+      nAngles: 360,
     };
 
     const state = {
       ...DEFAULTS,
       scheme: "tower_full",
       podSide: -1,          // -1 = Left (-X), +1 = Right (+X)
+      macSlide: 0.0,        // 0.0 = seated at (0,0), 1.0 = slid +235mm straight out the +Y front portal!
+      slideAnimDir: 0,      // 0 = idle, 1 = sliding out, -1 = sliding in
       explode: 0.0,
       yawDeg: 0.0,
       pitchDeg: 8.0,
@@ -459,19 +482,21 @@
       xrayHardware: false,
       printOnly: false,
       showPhase2: false,
-      camAzimuth: -0.68,
-      camElevation: 0.44,
-      camDist: 750,
-      camTarget: [0, 0, 155],
+      camAzimuth: -0.58,
+      camElevation: 0.38,
+      camDist: 770,
+      camTarget: [0, 15, 150],
     };
 
-    function roundedSquareRadius(theta, halfW, cornerR) {
+    // Exact V3 asymmetric profile matching generate_cad.py
+    function asymRoundedSquareRadius(theta, halfW, crFront, crRear) {
+      const cr = Math.sin(theta) >= 0.0 ? crFront : crRear;
       const ct = Math.abs(Math.cos(theta)), st = Math.abs(Math.sin(theta));
-      const c = halfW - cornerR;
+      const c = halfW - cr;
       if (ct > 1e-9 && (halfW * st / ct) <= c) return halfW / ct;
       if (st > 1e-9 && (halfW * ct / st) <= c) return halfW / st;
       const b = c * (ct + st);
-      return b + Math.sqrt(Math.max(0.0, b * b - (2.0 * c * c - cornerR * cornerR)));
+      return b + Math.sqrt(Math.max(0.0, b * b - (2.0 * c * c - cr * cr)));
     }
 
     function rectRayRadius(theta, hx, hy, cr) {
@@ -483,9 +508,25 @@
       return b + Math.sqrt(Math.max(0.0, b * b - (cx * cx + cy * cy - cr * cr)));
     }
 
-    function isCornerSlice(k, nAngles, cornerHalfSteps) {
-      const q = nAngles >> 2;
-      return Math.abs((k % q) - (q >> 1)) < cornerHalfSteps;
+    function isV3PillarSlice(k, nAngles) {
+      const deg = (k * 360.0) / nAngles;
+      return (
+        (deg >= 20.0 && deg < 43.0) ||
+        (deg >= 137.0 && deg < 160.0) ||
+        (deg >= 198.0 && deg < 232.0) ||
+        (deg >= 308.0 && deg < 342.0)
+      );
+    }
+
+    function v3Radii(theta, p) {
+      const pocketHalf = p.macW / 2 + p.macClearance;
+      const rearPockCr = p.macCornerR + p.macClearance;
+      const outerHalf = pocketHalf + p.wallThickness;
+      const rearOutCr = rearPockCr + p.wallThickness;
+      const rRail = asymRoundedSquareRadius(theta, p.railInnerHalf, 3.5, 24.0);
+      const rPock = asymRoundedSquareRadius(theta, pocketHalf, 1.0, rearPockCr);
+      const rOut = asymRoundedSquareRadius(theta, outerHalf, 12.0, rearOutCr);
+      return { rRail, rPock, rOut };
     }
 
     class ManifoldBuilder {
@@ -607,36 +648,30 @@
 
     function buildM1BaseCradle(p, lowProfile = false) {
       const mb = new ManifoldBuilder();
-      const pocketHalf = p.macW / 2 + p.macClearance;
-      const pocketCr = p.macCornerR + p.macClearance;
-      const outerHalf = pocketHalf + p.wallThickness;
-      const outerCr = pocketCr + p.wallThickness;
-      const rIntake = p.intakeHoleD / 2;
       const zRing = p.baseRingH, zShelf = p.shelfZ;
       const zColTop = lowProfile ? (p.shelfZ + 44.0) : (p.shelfZ + p.macBodyH + p.airGapAboveMac);
       const zTenonTop = lowProfile ? zColTop : (zColTop + p.tenonH);
 
       const thetas = Array.from({ length: p.nAngles }, (_, k) => (2 * Math.PI * k) / p.nAngles);
-      const sectorTypes = thetas.map((_, k) => (isCornerSlice(k, p.nAngles, p.cornerHalfSteps) ? 1 : 0));
+      const sectorTypes = thetas.map((_, k) => (isV3PillarSlice(k, p.nAngles) ? 1 : 0));
 
       mb.revolveSectors(thetas, sectorTypes, (theta, st) => {
-        const rOut = roundedSquareRadius(theta, outerHalf, outerCr);
-        if (st === 0) return [[rIntake, 0], [rOut, 0], [rOut, zRing], [rIntake, zRing]];
-        const rPock = roundedSquareRadius(theta, pocketHalf, pocketCr);
+        const { rRail, rPock, rOut } = v3Radii(theta, p);
+        if (st === 0) return [[rRail, 0], [rOut, 0], [rOut, zRing], [rRail, zRing]];
         if (lowProfile) {
-          return [[rIntake, 0], [rOut, 0], [rOut, zRing], [rOut, zShelf], [rOut, zColTop], [rPock, zColTop], [rPock, zShelf], [rIntake, zShelf], [rIntake, zRing]];
+          return [[rRail, 0], [rOut, 0], [rOut, zRing], [rOut, zShelf], [rOut, zColTop], [rPock, zColTop], [rPock, zShelf], [rRail, zShelf], [rRail, zRing]];
         }
         const rTin = rPock + p.tenonInset, rTout = rOut - p.tenonInset;
         return [
-          [rIntake, 0], [rOut, 0], [rOut, zRing], [rOut, zShelf], [rOut, zColTop],
+          [rRail, 0], [rOut, 0], [rOut, zRing], [rOut, zShelf], [rOut, zColTop],
           [rTout, zColTop], [rTout, zTenonTop], [rTin, zTenonTop], [rTin, zColTop],
-          [rPock, zColTop], [rPock, zShelf], [rIntake, zShelf], [rIntake, zRing]
+          [rPock, zColTop], [rPock, zShelf], [rRail, zShelf], [rRail, zRing]
         ];
       }, (b, theta, stPrev, stCurr) => {
-        const rOut = roundedSquareRadius(theta, outerHalf, outerCr), rPock = roundedSquareRadius(theta, pocketHalf, pocketCr);
+        const { rRail, rPock, rOut } = v3Radii(theta, p);
         const ct = Math.cos(theta), st = Math.sin(theta), v = (r, z) => b.addVert(r * ct, r * st, z);
         const flip = (stPrev === 1 && stCurr === 0), emit = (i0, i1, i2) => (flip ? b.addTri(i0, i2, i1) : b.addTri(i0, i1, i2));
-        const a0 = v(rIntake, zRing), a1 = v(rOut, zRing), b0 = v(rIntake, zShelf), b1 = v(rPock, zShelf), b2 = v(rOut, zShelf);
+        const a0 = v(rRail, zRing), a1 = v(rOut, zRing), b0 = v(rRail, zShelf), b1 = v(rPock, zShelf), b2 = v(rOut, zShelf);
         emit(a0, a1, b2); emit(a0, b2, b1); emit(a0, b1, b0);
         if (lowProfile) { const c0 = v(rPock, zColTop), c3 = v(rOut, zColTop); emit(b1, b2, c3); emit(b1, c3, c0); return; }
         const rTin = rPock + p.tenonInset, rTout = rOut - p.tenonInset;
@@ -648,20 +683,18 @@
 
     function buildM2UpperDeck(p) {
       const mb = new ManifoldBuilder();
-      const pocketHalf = p.macW / 2 + p.macClearance, pocketCr = p.macCornerR + p.macClearance;
-      const outerHalf = pocketHalf + p.wallThickness, outerCr = pocketCr + p.wallThickness;
+      const outerHalf = p.macW / 2 + p.macClearance + p.wallThickness;
       const rBolt = p.rs30BoltD / 2, rConeBot = 13.5, zConeTop = Math.min(10.0, p.deckSeatZ - 3.0);
       const rSeat = p.rs30SeatD / 2, rLipOut = Math.min(p.rs30LipOuterD / 2, outerHalf - 2.0);
       const zSeat = p.deckSeatZ, zOuter = zSeat - 1.0, zLipTop = zSeat + 4.0, zMwall = p.tenonH + 0.5;
 
       const thetas = Array.from({ length: p.nAngles }, (_, k) => (2 * Math.PI * k) / p.nAngles);
-      const sectorTypes = thetas.map((_, k) => (isCornerSlice(k, p.nAngles, p.cornerHalfSteps) ? 1 : 0));
+      const sectorTypes = thetas.map((_, k) => (isV3PillarSlice(k, p.nAngles) ? 1 : 0));
 
       const mortise = (theta) => {
-        const rOut = roundedSquareRadius(theta, outerHalf, outerCr);
-        const rPock = roundedSquareRadius(theta, pocketHalf, pocketCr);
+        const { rPock, rOut } = v3Radii(theta, p);
         const rMin = rPock + (p.tenonInset - p.tenonTol), rMout = rOut - (p.tenonInset - p.tenonTol);
-        const rMmid = 0.5 * (rMin + rMout), zMpeak = Math.min(zOuter - 1.5, zMwall + 0.5 * (rMout - rMin));
+        const rMmid = 0.5 * (rMin + rMout), zMpeak = Math.min(zOuter - 1.2, zMwall + 0.5 * (rMout - rMin));
         return { rOut, rMin, rMmid, rMout, zMpeak };
       };
 
@@ -686,7 +719,7 @@
       const mb = new ManifoldBuilder();
       const outerW = p.brickT + 16.0, outerD = p.brickW + 16.0, outerCr = 14.0, wall = 6.0, height = p.brickH + 10.0, floorH = 8.0;
       const ohx = outerW / 2, ohy = outerD / 2, ihx = ohx - wall, ihy = ohy - wall, icr = 8.0;
-      const n = 96, q = n >> 2, winHalf = 6;
+      const n = 128, q = n >> 2, winHalf = 8;
       const thetas = Array.from({ length: n }, (_, k) => (2 * Math.PI * k) / n);
       const sectorTypes = thetas.map((_, k) => ((k % q) < winHalf || (k % q) >= q - winHalf ? 0 : 1));
       mb.revolveSectors(thetas, sectorTypes, (theta, st) => {
@@ -702,10 +735,10 @@
     }
 
     function buildM4DustFilter() {
-      const mb = new ManifoldBuilder(), n = 96;
+      const mb = new ManifoldBuilder(), n = 128;
       const thetas = Array.from({ length: n }, (_, k) => (2 * Math.PI * k) / n);
       mb.revolveSectors(thetas, new Array(n).fill(0), (theta) => {
-        const ro = roundedSquareRadius(theta, 92.0, 22.0);
+        const ro = asymRoundedSquareRadius(theta, 90.0, 18.0, 18.0);
         return [[82.0, 0], [ro, 0], [ro, 3.2], [86.0, 3.2], [86.0, 1.6], [82.0, 1.6]];
       }, null);
       return mb;
@@ -752,7 +785,6 @@
       return mb.toGLArrays(5);
     }
 
-    // Pure-JS PKZIP (Store + CRC32) for single-click ZIP download
     const CRC_TABLE = (() => {
       const t = new Uint32Array(256);
       for (let i = 0; i < 256; i++) {
@@ -882,7 +914,9 @@
       macFoot: uploadGLMesh(buildSolidRoundedPrism(179.2, 179.2, 8.0, 89.0, 64)),
       macFrontPort: uploadGLMesh(buildSolidRoundedPrism(12.0, 4.0, 5.0, 1.5, 16)),
       macSdSlot: uploadGLMesh(buildSolidRoundedPrism(28.0, 4.0, 3.0, 1.0, 16)),
-      macRearBar: uploadGLMesh(buildSolidRoundedPrism(144.0, 4.0, 22.0, 3.0, 24)),
+      macRearBar: uploadGLMesh(buildSolidRoundedPrism(134.0, 4.0, 22.0, 3.0, 24)),
+      macPowerBtn: uploadGLMesh(buildCylinderY(5.5, 3.0, 24)),
+      velvetStrip: uploadGLMesh(buildSolidRoundedPrism(7.5, 152.0, 1.2, 2.0, 16)),
       rs30Base: uploadGLMesh(buildSolidRoundedPrism(194.0, 186.0, 18.0, 88.0, 64)),
       rs30Arm: uploadGLMesh(buildSolidRoundedPrism(14.0, 52.0, 148.0, 6.0, 24)),
       rs30Head: uploadGLMesh(buildSolidRoundedPrism(258.0, 190.0, 196.0, 20.0, 56)),
@@ -923,9 +957,16 @@
       gl.drawArrays(gl.TRIANGLES, 0, mesh.count);
     }
 
+    function updateMacSlideUI() {
+      const mm = Math.round(state.macSlide * 235);
+      document.getElementById("rngMacSlide").value = Math.round(state.macSlide * 100);
+      document.getElementById("valMacSlide").textContent = mm === 0 ? "已推入锁止 (0mm)" : `前向滑出 +${mm}mm`;
+    }
+
     function getSceneTransforms() {
       const ex = state.explode;
-      const outerW = state.macW + 2 * state.macClearance + 2 * state.wallThickness;
+      const pocketW = state.macW + 2 * state.macClearance;
+      const outerW = pocketW + 2 * state.wallThickness;
       const colTopZ = state.shelfZ + state.macBodyH + state.airGapAboveMac;
       const sideBySide = (state.scheme === "side_by_side");
 
@@ -933,19 +974,18 @@
       const m2X = sideBySide ? state.sideBySideDx / 2 : 0;
       const m2BaseZ = sideBySide ? (ex * 35) : (colTopZ + ex * 95);
 
+      const macY = state.macSlide * 235.0; // Slides straight out the +Y front portal along horizontal rails!
       const macZ = state.shelfZ + ex * 45;
       const rs30TurntableZ = m2BaseZ + state.deckSeatZ + ex * 55;
 
-      // Side-mounted Power Pod alongside M1's blank Left (-X) or Right (+X) wall!
-      // In side_by_side, place it on the outer side of M1 (-X) so it never sits between M1 and M2!
       const effSide = sideBySide ? -1 : state.podSide;
       const podX = m1X + effSide * (outerW / 2 + (state.brickT + 16) / 2 + 2 + ex * 55);
       const podY = 0;
 
-      const filterY = state.drawerPull * 165 + ex * 75;
+      const filterY = state.drawerPull * 175 + ex * 75;
       const filterZ = state.baseRingH + 3.0;
 
-      return { outerW, colTopZ, sideBySide, m1X, m2X, m2BaseZ, macZ, rs30TurntableZ, podX, podY, filterY, filterZ };
+      return { pocketW, outerW, colTopZ, sideBySide, m1X, m2X, m2BaseZ, macY, macZ, rs30TurntableZ, podX, podY, filterY, filterZ };
     }
 
     function isLightTheme() {
@@ -959,10 +999,26 @@
       return false;
     }
 
-    let animTime = 0;
+    let animTime = 0, lastTs = 0;
 
     function renderFrame(ts) {
+      const dt = Math.min(0.05, ((ts || 0) - lastTs) * 0.001 || 0.016);
+      lastTs = ts || 0;
       animTime = (ts || 0) * 0.001;
+
+      if (state.slideAnimDir !== 0) {
+        state.macSlide += state.slideAnimDir * dt * 0.65;
+        if (state.macSlide >= 1.0) {
+          state.macSlide = 1.0;
+          state.slideAnimDir = -1; // Automatically glide back in to show seating against rear backstops!
+        } else if (state.macSlide <= 0.0) {
+          state.macSlide = 0.0;
+          state.slideAnimDir = 0;
+          document.getElementById("btnPlaySlide").textContent = "▶ 自动演示推入/抽出";
+        }
+        updateMacSlideUI();
+      }
+
       const rect = glCanvas.parentElement.getBoundingClientRect();
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       const w = Math.max(1, Math.floor(rect.width)), h = Math.max(1, Math.floor(rect.height));
@@ -990,11 +1046,17 @@
 
       const dockPrimary = [0.22, 0.45, 0.82], dockDeckCol = [0.19, 0.39, 0.72];
       const dockPodCol = [0.25, 0.33, 0.46], dockFilter = [0.16, 0.58, 0.52];
+      const railVelvetCol = [0.92, 0.60, 0.12];
       const macSilver = lightMode ? [0.78, 0.81, 0.85] : [0.82, 0.85, 0.89];
       const macDark = [0.16, 0.17, 0.20], rs30Gray = [0.38, 0.40, 0.44], rs30ArmCol = [0.27, 0.29, 0.33], redRing = [0.86, 0.18, 0.20];
 
       gl.disable(gl.BLEND); gl.depthMask(true);
       drawMesh(cadGL.m1, M4.translate(tf.m1X, 0, 0), vpMat, eye, dockPrimary, 1.0, 0.30);
+      // Highlight the two 8.5mm horizontal velvet slide rails on M1 at Z = 26mm!
+      const railX = (state.railInnerHalf + tf.pocketW / 2) / 2;
+      drawMesh(hwMeshes.velvetStrip, M4.translate(tf.m1X - railX, 8, state.shelfZ), vpMat, eye, railVelvetCol, 1.0, 0.15);
+      drawMesh(hwMeshes.velvetStrip, M4.translate(tf.m1X + railX, 8, state.shelfZ), vpMat, eye, railVelvetCol, 1.0, 0.15);
+
       drawMesh(cadGL.m2, M4.translate(tf.m2X, 0, tf.m2BaseZ), vpMat, eye, dockDeckCol, 1.0, 0.30);
       if (state.scheme !== "tower_slim") drawMesh(cadGL.m3, M4.translate(tf.podX, tf.podY, 0), vpMat, eye, dockPodCol, 1.0, 0.25);
       drawMesh(cadGL.m4, M4.translate(tf.m1X, tf.filterY, tf.filterZ), vpMat, eye, dockFilter, 1.0, 0.2);
@@ -1003,13 +1065,14 @@
       const hwAlpha = state.xrayHardware ? 0.32 : 1.0;
       if (!state.printOnly) {
         if (state.xrayHardware) { gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA); gl.depthMask(false); }
-        drawMesh(hwMeshes.macFoot, M4.translate(tf.m1X, 0, tf.macZ - state.macFootH), vpMat, eye, macDark, hwAlpha, 0.2);
-        drawMesh(hwMeshes.macBody, M4.translate(tf.m1X, 0, tf.macZ), vpMat, eye, macSilver, hwAlpha, 0.75);
+        drawMesh(hwMeshes.macFoot, M4.translate(tf.m1X, tf.macY, tf.macZ - state.macFootH), vpMat, eye, macDark, hwAlpha, 0.2);
+        drawMesh(hwMeshes.macBody, M4.translate(tf.m1X, tf.macY, tf.macZ), vpMat, eye, macSilver, hwAlpha, 0.75);
         if (!state.xrayHardware) {
-          drawMesh(hwMeshes.macFrontPort, M4.translate(tf.m1X - 36, 97.5, tf.macZ + 18), vpMat, eye, macDark, 1.0, 0.1);
-          drawMesh(hwMeshes.macFrontPort, M4.translate(tf.m1X - 14, 97.5, tf.macZ + 18), vpMat, eye, macDark, 1.0, 0.1);
-          drawMesh(hwMeshes.macSdSlot, M4.translate(tf.m1X + 26, 97.5, tf.macZ + 18), vpMat, eye, macDark, 1.0, 0.1);
-          drawMesh(hwMeshes.macRearBar, M4.translate(tf.m1X, -97.5, tf.macZ + 14), vpMat, eye, macDark, 1.0, 0.1);
+          drawMesh(hwMeshes.macFrontPort, M4.translate(tf.m1X - 36, tf.macY + 97.5, tf.macZ + 18), vpMat, eye, macDark, 1.0, 0.1);
+          drawMesh(hwMeshes.macFrontPort, M4.translate(tf.m1X - 14, tf.macY + 97.5, tf.macZ + 18), vpMat, eye, macDark, 1.0, 0.1);
+          drawMesh(hwMeshes.macSdSlot, M4.translate(tf.m1X + 26, tf.macY + 97.5, tf.macZ + 18), vpMat, eye, macDark, 1.0, 0.1);
+          drawMesh(hwMeshes.macRearBar, M4.translate(tf.m1X - 4, tf.macY - 97.5, tf.macZ + 14), vpMat, eye, macDark, 1.0, 0.1);
+          drawMesh(hwMeshes.macPowerBtn, M4.translate(tf.m1X + 66, tf.macY - 99.5, tf.macZ + 22), vpMat, eye, [0.10, 0.11, 0.13], 1.0, 0.3);
         }
         if (state.scheme !== "tower_slim") {
           drawMesh(hwMeshes.powerBrick, M4.translate(tf.podX, tf.podY, 10 + state.explode * 35), vpMat, eye, macDark, hwAlpha, 0.2);
@@ -1078,7 +1141,32 @@
         vpMat, w, h, mutedLine, 1.2, [5, 4]
       );
 
-      // 2. RS30 Ø333mm (R = 166.5mm) 360° Worst-Case Swept Clearance Envelope Circle
+      // 2. Front Slide-In Portal & Horizontal Rail Track Overlay
+      if (state.showDims || state.macSlide > 0.01) {
+        const pHalf = tf.pocketW / 2;
+        const portalSpan = draw3DPoly(
+          [[tf.m1X - pHalf, 102, state.shelfZ + 92], [tf.m1X + pHalf, 102, state.shelfZ + 92]],
+          vpMat, w, h, "#f59e0b", 2.2
+        );
+        if (portalSpan) {
+          drawPillLabel(
+            `正面滑轨舱门净宽 ${tf.pocketW.toFixed(1)}mm (>Mac 197mm)`,
+            (portalSpan[0][0] + portalSpan[1][0]) / 2,
+            (portalSpan[0][1] + portalSpan[1][1]) / 2 - 12,
+            labelBg, "#f59e0b", "#f59e0b"
+          );
+        }
+        if (state.macSlide > 0.02) {
+          draw3DPoly([[tf.m1X - 95, 0, state.shelfZ], [tf.m1X - 95, tf.macY + 95, state.shelfZ]], vpMat, w, h, "#f59e0b", 2.0, [6, 4]);
+          draw3DPoly([[tf.m1X + 95, 0, state.shelfZ], [tf.m1X + 95, tf.macY + 95, state.shelfZ]], vpMat, w, h, "#f59e0b", 2.0, [6, 4]);
+          const slideLbl = M4.project([tf.m1X, tf.macY + 115, tf.macZ + 40], vpMat, w, h);
+          if (slideLbl) {
+            drawPillLabel(`水平前推滑轨 (+${Math.round(tf.macY)}mm · 免拆顶部 5.4kg RS30)`, slideLbl[0], slideLbl[1], labelBg, "#f59e0b", "#f59e0b");
+          }
+        }
+      }
+
+      // 3. RS30 Ø333mm (R = 166.5mm) 360° Swept Clearance Envelope Circle
       if (state.showSwept && !state.printOnly) {
         const zSweep = tf.rs30TurntableZ + 55;
         const circlePts = [];
@@ -1097,7 +1185,7 @@
         }
       }
 
-      // 3. Key Dimensions
+      // 4. Key Dimensions
       if (state.showDims) {
         const hw = tf.outerW / 2;
         const dimFront = draw3DPoly([[tf.m1X - hw, 122, 0], [tf.m1X + hw, 122, 0]], vpMat, w, h, "#3b82f6", 1.5);
@@ -1106,14 +1194,11 @@
         if (tf.sideBySide) {
           const dimAx = draw3DPoly([[tf.m1X, -135, 0], [tf.m2X, -135, 0]], vpMat, w, h, "#10b981", 1.8);
           if (dimAx) drawPillLabel(`双坞安全中心距 ${state.sideBySideDx}mm`, (dimAx[0][0] + dimAx[1][0]) / 2, (dimAx[0][1] + dimAx[1][1]) / 2 + 14, labelBg, "#10b981", "#10b981");
-        } else {
-          const dimDeck = draw3DPoly([[tf.m2X + hw + 14, 0, tf.m2BaseZ], [tf.m2X + hw + 14, 0, tf.m2BaseZ + state.deckSeatZ]], vpMat, w, h, "#f59e0b", 2.0);
-          if (dimDeck) drawPillLabel(`${state.deckSeatZ}mm 实厚承重桥 (8×刚度)`, dimDeck[0][0] + 68, (dimDeck[0][1] + dimDeck[1][1]) / 2, labelBg, labelFg, labelBdr);
         }
       }
 
-      // 4. Unobstructed Rear Cable Routing
-      if (state.showCables && !state.printOnly) {
+      // 5. Unobstructed Rear Cable Routing (shown when Mac is seated inside the bay)
+      if (state.showCables && !state.printOnly && state.macSlide < 0.08) {
         const hdmiPts = [
           [tf.m1X + 28, -99, tf.macZ + 16],
           [tf.m1X + 52, -122, tf.macZ + 38],
@@ -1122,7 +1207,7 @@
           [tf.m2X + 20, -96, tf.rs30TurntableZ + 62],
         ];
         const hdmiProj = draw3DPoly(hdmiPts, vpMat, w, h, "#10b981", 3.0);
-        if (hdmiProj) drawPillLabel("Mac背口100%无遮挡 · 0.5m HDMI 2.1", hdmiProj[1][0], hdmiProj[1][1] + 12, labelBg, "#10b981", "#10b981");
+        if (hdmiProj) drawPillLabel("153.8mm敞开背窗 · 背口与开机键0遮挡", hdmiProj[1][0], hdmiProj[1][1] + 12, labelBg, "#10b981", "#10b981");
 
         if (state.scheme !== "tower_slim") {
           const dcPts = [
@@ -1134,17 +1219,14 @@
         }
       }
 
-      // 5. Airflow
-      if (state.showAirflow) {
+      // 6. Airflow
+      if (state.showAirflow && state.macSlide < 0.15) {
         const pulse = (animTime * 42) % 28;
         draw3DPoly([[tf.m1X, 138 - pulse, 12], [tf.m1X, 82, 14]], vpMat, w, h, "#06b6d4", 2.4);
         draw3DPoly([[tf.m1X, -100, tf.macZ + 58], [tf.m1X, -155 - pulse, tf.macZ + 64]], vpMat, w, h, "#ef4444", 2.6);
-        const exLbl = M4.project([tf.m1X, -162, tf.macZ + 66], vpMat, w, h);
-        if (exLbl) drawPillLabel("背部热风直排无阻挡", exLbl[0], exLbl[1], labelBg, "#ef4444", "#ef4444");
       }
     }
 
-    // Orbit / Pan / Zoom
     let dragMode = null, lastX = 0, lastY = 0;
     glCanvas.addEventListener("contextmenu", e => e.preventDefault());
     glCanvas.addEventListener("pointerdown", e => {
@@ -1166,22 +1248,22 @@
     glCanvas.addEventListener("pointerup", () => { dragMode = null; });
     glCanvas.addEventListener("wheel", e => {
       e.preventDefault();
-      state.camDist = Math.max(280, Math.min(1750, state.camDist * (1 + e.deltaY * 0.001)));
+      state.camDist = Math.max(280, Math.min(1850, state.camDist * (1 + e.deltaY * 0.001)));
     }, { passive: false });
 
     const CAM_PRESETS = {
-      iso:    { az: -0.68, el: 0.44, dist: 760, z: 155 },
-      front:  { az: 0.0,   el: 0.12, dist: 720, z: 155 },
-      back:   { az: Math.PI, el: 0.18, dist: 740, z: 145 },
-      side:   { az: -Math.PI / 2, el: 0.16, dist: 760, z: 145 },
-      top:    { az: 0.0,   el: 1.44, dist: 840, z: 140 },
-      bottom: { az: 0.4,   el: -1.25, dist: 700, z: 80 },
+      iso:    { az: -0.58, el: 0.38, dist: 770, y: 15, z: 150 },
+      front:  { az: 0.0,   el: 0.14, dist: 740, y: 20, z: 145 },
+      back:   { az: Math.PI, el: 0.18, dist: 740, y: 0, z: 145 },
+      side:   { az: -Math.PI / 2, el: 0.16, dist: 770, y: 20, z: 145 },
+      top:    { az: 0.0,   el: 1.44, dist: 850, y: 15, z: 140 },
+      bottom: { az: 0.38,  el: -1.25, dist: 710, y: 10, z: 80 },
     };
     document.querySelectorAll(".cam-btn").forEach(btn => btn.addEventListener("click", () => {
       const p = CAM_PRESETS[btn.dataset.cam];
       state.camAzimuth = p.az; state.camElevation = p.el;
       state.camDist = state.scheme === "side_by_side" ? p.dist * 1.25 : p.dist;
-      state.camTarget = [0, 0, state.scheme === "side_by_side" ? 115 : p.z];
+      state.camTarget = [0, p.y, state.scheme === "side_by_side" ? 115 : p.z];
     }));
 
     const MATERIALS = {
@@ -1194,7 +1276,7 @@
       petg: {
         name: "PETG 哑光工程料", farmRate: [0.10, 0.15], jlcRate: [0.30, 0.42], wenextRate: [0.38, 0.52],
         sf: "> 18× (5.4kg长期达标)",
-        note: "✅ 性价比主力：V2 将顶盘实心桥加厚至 16mm 后，普通 PETG 在 4层壁 + 30% Gyroid 填充下中心变形仅 0.04mm，耐热 75°C 完全满足承重。（注：嘉立创贵是因为按模型体积系数报价，与农场 4壁30%填充的 PETG 实际强度处于同一梯队）。",
+        note: "✅ 性价比主力：V3 拥有 8mm 厚立柱与 16mm 实心顶板，普通 PETG 在 4层壁 + 30% Gyroid 填充下中心变形仅 0.04mm，耐热 75°C 完全满足承重。",
         tempSpec: "PETG 哑光深空灰/黑色，层高 0.20mm，4层外壁(≥1.6mm)，顶底各5层，30% 陀螺仪(Gyroid)填充",
       },
       asa: {
@@ -1206,13 +1288,13 @@
       pa12: {
         name: "SLS 激光烧结尼龙 PA12", farmRate: [0.85, 1.20], jlcRate: [0.80, 1.15], wenextRate: [0.95, 1.35],
         sf: "> 45× (100%实心各向同性)",
-        note: "🏆 工业手板天花板：激光烧结尼龙粉末 100% 实心，无 Z 轴层间剥离短板，耐温 120°C+、零层纹。对于 5.4kg 桌面静置属性能大幅过剩，适合追求量产注塑级质感的用户。",
+        note: "🏆 工业手板天花板：激光烧结尼龙粉末 100% 实心，无 Z 轴层间剥离短板，耐温 120°C+、零层纹。追求量产注塑级质感可选。",
         tempSpec: "SLS PA12 尼龙（深灰/染黑喷砂），100%实心烧结，默认公差 ±0.2mm",
       },
       pla: {
         name: "普通 PLA", farmRate: [0.07, 0.11], jlcRate: [0.25, 0.35], wenextRate: [0.32, 0.45],
         sf: "⚠ 不合格 (受热易蠕变)",
-        note: "❌ 避坑警告：PLA 虽然室温硬，但热变形温度仅 52–55°C 且在 5.4kg 恒定静载下会发生高分子蠕变松弛，半年后顶板会下凹！请务必换选 PETG 或 PETG-CF。",
+        note: "❌ 避坑警告：PLA 热变形温度仅 52–55°C 且在 5.4kg 恒定静载下会发生高分子蠕变松弛，半年后顶板会下凹！请务必换选 PETG 或 PETG-CF。",
         tempSpec: "仅限低成本试装验证尺寸，正式承重请换 PETG / PETG-CF",
       },
     };
@@ -1221,34 +1303,32 @@
 
     function getActiveModulesList() {
       const list = [
-        { key: "m1", file: "01_mac_studio_base_cradle.stl", title: "M1 · 7.5mm重型外骨骼悬浮底座", note: "底面朝下平铺 · 零支撑" },
-        { key: "m2", file: "02_rs30_gimbal_upper_deck.stl", title: "M2 · 16mm实厚防干涉云台顶盘", note: "底面直接朝下平铺(45°自支撑槽) · 零支撑" },
+        { key: "m1", file: "01_mac_studio_base_cradle.stl", title: "M1 · V3 前推滑轨机舱底座", note: "199.4mm前滑轨门 + 后圆角靠山 · 零支撑" },
+        { key: "m2", file: "02_rs30_gimbal_upper_deck.stl", title: "M2 · V3 16mm实厚防干涉云台顶盘", note: "底面直接朝下平铺(45°自支撑槽) · 零支撑" },
       ];
       if (state.scheme !== "tower_slim") {
         list.push({ key: "m3", file: "03_power_brick_cable_pod.stl", title: "M3 · 侧挂式300W电源散热舱", note: "置于Mac左/右侧空白壁 · 零遮挡背口" });
       }
-      list.push({ key: "m4", file: "04_bottom_dust_filter_frame.stl", title: "M4 · 底部抽拉防尘网托框", note: "3.2mm薄框 · 15分钟快打" });
+      list.push({ key: "m4", file: "04_bottom_dust_filter_frame.stl", title: "M4 · 底部前抽式防尘网托框", note: "180×180×3.2mm · 从前门下部抽出清洗" });
       return list;
     }
 
     function updateReadoutsAndCards() {
-      const outerW = state.macW + 2 * state.macClearance + 2 * state.wallThickness;
+      const pocketW = state.macW + 2 * state.macClearance;
+      const outerW = pocketW + 2 * state.wallThickness;
       const fits256 = outerW <= 256.0;
       document.getElementById("bedFitBadge").textContent = fits256
         ? `✓ 适配 256mm 拓竹盘 (${outerW.toFixed(1)}mm)`
         : `⚠ 需 ≥300mm 大盘 (${outerW.toFixed(1)}mm)`;
 
       const titles = {
-        tower_full: "方案 A (V2) · 立式双层侧挂电源坞",
-        tower_slim: "方案 B (V2) · 立式极简承重塔",
-        side_by_side: "方案 C (V2) · 294mm宽轴距防撞并排坞",
+        tower_full: "方案 A (V3) · 前推滑轨双层侧挂电源坞",
+        tower_slim: "方案 B (V3) · 前推滑轨极简承重塔",
+        side_by_side: "方案 C (V3) · 295mm宽轴距防撞并排坞",
       };
       document.getElementById("hudSchemeTitle").textContent = titles[state.scheme];
-      const wTot = state.scheme === "side_by_side"
-        ? (state.sideBySideDx + outerW + (state.brickT + 18))
-        : (state.scheme === "tower_slim" ? outerW : outerW + state.brickT + 18);
       document.getElementById("hudEnvelope").textContent =
-        `占地: ${wTot.toFixed(0)} × ${outerW.toFixed(0)} mm | Mac背口净空: 100%敞开`;
+        `前舱门净宽: ${pocketW.toFixed(1)}mm | 背窗净宽: 153.8mm`;
 
       const activeMods = getActiveModulesList();
       const container = document.getElementById("stlPartCards");
@@ -1269,7 +1349,7 @@
         container.appendChild(card);
       });
       container.querySelectorAll("button[data-dl]").forEach(btn => btn.addEventListener("click", () => {
-        triggerDownload(cadBuilders[btn.dataset.dl].toBinarySTL(`StudioBeam V2 ${btn.dataset.fn}`), btn.dataset.fn);
+        triggerDownload(cadBuilders[btn.dataset.dl].toBinarySTL(`StudioBeam V3 ${btn.dataset.fn}`), btn.dataset.fn);
       }));
       updateCostQuote();
     }
@@ -1290,16 +1370,16 @@
 
       const filesStr = activeMods.map(m => m.file).join("、");
       document.getElementById("txtOrderNote").value =
-        `老板你好，麻烦打一套承重结构支架 V2 版（共 ${activeMods.length} 个 STL：${filesStr}，单位 mm，上方需稳固承载 5.4kg 投影仪）。\n` +
+        `老板你好，麻烦打一套承重滑轨支架 V3 版（共 ${activeMods.length} 个 STL：${filesStr}，单位 mm，上方需稳固承载 5.4kg 投影仪）。\n` +
         `工艺要求：${mat.tempSpec}。\n` +
-        `摆放说明：全部 4 个零件均直接底面(Z=0)朝下平铺热床即可！凹槽均已设计 45° 自支撑斜顶，全套零支撑直打。谢谢！`;
+        `摆放说明：全部零件均直接底面(Z=0)朝下平铺热床即可！凹槽均已设计 45° 自支撑斜顶，全套零支撑直打。谢谢！`;
     }
 
     const exportZipAll = () => {
       const mods = getActiveModulesList();
-      const files = [{ name: "00_V2代打工艺与承重说明.txt", data: document.getElementById("txtOrderNote").value }];
-      for (const m of mods) files.push({ name: m.file, data: cadBuilders[m.key].toBinarySTL(`StudioBeam V2 ${m.file}`) });
-      triggerDownload(buildZipBytes(files), "StudioBeam_DuoDock_V2_STL_Package.zip", "application/zip");
+      const files = [{ name: "00_V3代打工艺与滑轨组装说明.txt", data: document.getElementById("txtOrderNote").value }];
+      for (const m of mods) files.push({ name: m.file, data: cadBuilders[m.key].toBinarySTL(`StudioBeam V3 ${m.file}`) });
+      triggerDownload(buildZipBytes(files), "StudioBeam_DuoDock_V3_STL_Package.zip", "application/zip");
     };
     document.getElementById("btnQuickExportZip").addEventListener("click", exportZipAll);
     document.getElementById("btnExportZipTab").addEventListener("click", exportZipAll);
@@ -1327,7 +1407,24 @@
       const docHtml = "<!DOCTYPE html>\n<html lang=\"zh-CN\">\n" +
         document.documentElement.innerHTML.replace(/<script[^>]*gstatic[^>]*><\/script>/i, offlineCss) +
         "\n</html>";
-      triggerDownload(docHtml, "StudioBeam_DuoDock_V2_Offline_Viewer.html", "text/html;charset=utf-8");
+      triggerDownload(docHtml, "StudioBeam_DuoDock_V3_Offline_Viewer.html", "text/html;charset=utf-8");
+    });
+
+    document.getElementById("btnPlaySlide").addEventListener("click", (e) => {
+      if (state.slideAnimDir !== 0) {
+        state.slideAnimDir = 0;
+        e.target.textContent = "▶ 自动演示推入/抽出";
+      } else {
+        state.slideAnimDir = state.macSlide > 0.85 ? -1 : 1;
+        e.target.textContent = "⏸ 暂停演示";
+      }
+    });
+
+    document.getElementById("rngMacSlide").addEventListener("input", (e) => {
+      state.slideAnimDir = 0;
+      document.getElementById("btnPlaySlide").textContent = "▶ 自动演示推入/抽出";
+      state.macSlide = parseFloat(e.target.value) / 100;
+      updateMacSlideUI();
     });
 
     document.querySelectorAll(".tab-btn").forEach(btn => btn.addEventListener("click", () => {
@@ -1350,8 +1447,8 @@
         b.classList.toggle("bg-[var(--secondary)]", active);
         b.classList.toggle("border-[var(--border)]", !active);
       });
-      state.camDist = state.scheme === "side_by_side" ? 940 : 760;
-      state.camTarget = [0, 0, state.scheme === "side_by_side" ? 115 : 155];
+      state.camDist = state.scheme === "side_by_side" ? 950 : 770;
+      state.camTarget = [0, 15, state.scheme === "side_by_side" ? 115 : 150];
       rebuildPrintableCAD();
     }));
 
