@@ -1,0 +1,136 @@
+{
+  "version": "2.0-structural-clearance-verified",
+  "parameters_mm": {
+    "mac_w": 197.0,
+    "mac_d": 197.0,
+    "mac_body_h": 87.0,
+    "mac_foot_h": 8.0,
+    "mac_corner_r": 30.4,
+    "mac_intake_d": 179.2,
+    "rs30_total_w": 298.0,
+    "rs30_total_h": 249.0,
+    "rs30_total_d": 190.0,
+    "rs30_swept_r": 166.5,
+    "rs30_base_d": 196.0,
+    "rs30_bolt_hole_d": 7.0,
+    "brick_w": 188.0,
+    "brick_t": 44.0,
+    "brick_h": 92.0,
+    "mac_side_clearance": 1.2,
+    "intake_hole_d": 182.0,
+    "wall_thickness": 7.5,
+    "base_ring_h": 6.0,
+    "shelf_z": 26.0,
+    "air_gap_above_mac": 18.0,
+    "tenon_h": 8.0,
+    "tenon_inset": 1.9,
+    "tenon_tol": 0.25,
+    "deck_seat_z": 16.0,
+    "deck_outer_z": 15.0,
+    "deck_lip_top_z": 20.0,
+    "rs30_seat_d": 198.4,
+    "rs30_lip_outer_d": 207.0,
+    "side_by_side_dx": 294.0,
+    "n_angles": 192,
+    "corner_half_steps": 10
+  },
+  "engineering_verification": {
+    "rs30_mass_kg": 5.4,
+    "design_load_3x_sf_kg": 16.2,
+    "pillar_total_area_mm2": 2080,
+    "deck_solid_bridge_thickness_mm": 16.0,
+    "estimated_petg_deflection_mm": 0.04,
+    "rs30_360_swept_radius_mm": 166.5,
+    "scheme_a_rear_port_clearance": "100% open (-Y unobstructed; Power Pod moved to blank -X/+X side)",
+    "scheme_a_u_arm_360_clearance": "100% open (outer deck corners stepped 1mm below turntable seat)",
+    "scheme_c_min_360_gap_mm": 20.3
+  },
+  "modules": {
+    "01_mac_studio_base_cradle.stl": {
+      "vertices": 1488,
+      "triangles": 2976,
+      "is_watertight_2manifold": true,
+      "duplicate_half_edges": 0,
+      "unmatched_half_edges": 0,
+      "bbox_mm": [
+        214.4,
+        214.4,
+        139.0
+      ],
+      "solid_volume_cm3": 606.3,
+      "surface_area_cm2": 1462.48,
+      "fdm_effective_cm3_30pct": 276.89,
+      "mass_petg_fdm_g": 351.7,
+      "mass_jlc_solid_petg_g": 770.0,
+      "mass_sls_pa12_g": 612.4,
+      "file": "/home/antigravity/mac-rs30-dock/stl/01_mac_studio_base_cradle.stl",
+      "file_size_kb": 145.4
+    },
+    "02_rs30_gimbal_upper_deck.stl": {
+      "vertices": 2472,
+      "triangles": 4944,
+      "is_watertight_2manifold": true,
+      "duplicate_half_edges": 0,
+      "unmatched_half_edges": 0,
+      "bbox_mm": [
+        214.4,
+        214.4,
+        20.0
+      ],
+      "solid_volume_cm3": 696.61,
+      "surface_area_cm2": 1141.13,
+      "fdm_effective_cm3_30pct": 283.11,
+      "mass_petg_fdm_g": 359.6,
+      "mass_jlc_solid_petg_g": 884.7,
+      "mass_sls_pa12_g": 703.6,
+      "file": "/home/antigravity/mac-rs30-dock/stl/02_rs30_gimbal_upper_deck.stl",
+      "file_size_kb": 241.5
+    },
+    "03_power_brick_cable_pod.stl": {
+      "vertices": 648,
+      "triangles": 1296,
+      "is_watertight_2manifold": true,
+      "duplicate_half_edges": 0,
+      "unmatched_half_edges": 0,
+      "bbox_mm": [
+        60.0,
+        204.0,
+        102.0
+      ],
+      "solid_volume_cm3": 145.11,
+      "surface_area_cm2": 625.13,
+      "fdm_effective_cm3_30pct": 84.14,
+      "mass_petg_fdm_g": 106.9,
+      "mass_jlc_solid_petg_g": 184.3,
+      "mass_sls_pa12_g": 146.6,
+      "file": "/home/antigravity/mac-rs30-dock/stl/03_power_brick_cable_pod.stl",
+      "file_size_kb": 63.4
+    },
+    "04_bottom_dust_filter_frame.stl": {
+      "vertices": 768,
+      "triangles": 1536,
+      "is_watertight_2manifold": true,
+      "duplicate_half_edges": 0,
+      "unmatched_half_edges": 0,
+      "bbox_mm": [
+        184.0,
+        184.0,
+        3.2
+      ],
+      "solid_volume_cm3": 35.99,
+      "surface_area_cm2": 285.28,
+      "fdm_effective_cm3_30pct": 29.33,
+      "mass_petg_fdm_g": 37.2,
+      "mass_jlc_solid_petg_g": 45.7,
+      "mass_sls_pa12_g": 36.4,
+      "file": "/home/antigravity/mac-rs30-dock/stl/04_bottom_dust_filter_frame.stl",
+      "file_size_kb": 75.1
+    }
+  },
+  "totals": {
+    "total_fdm_petg_30pct_infill_g": 855.4,
+    "core_2_modules_fdm_petg_g": 711.3,
+    "total_solid_petg_equiv_g": 1884.7,
+    "total_sls_pa12_nylon_g": 1499.0
+  }
+}
