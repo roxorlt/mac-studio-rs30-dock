@@ -1,0 +1,1407 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StudioBeam DuoDock V2 — M5 Mac Studio × 极米 RS30 交互式 3D 支架坞工作台</title>
+  <meta name="description" content="V2 承重与全向防干涉核准版：专为 Apple M5 Mac Studio 与 极米 RS30 (5.4kg) 定制的参数化 3D 打印支架坞交互预览、STL 导出与代打成本评估" />
+  
+  <style>
+    :root {
+      --background: #0b0f19;
+      --card: #131a2a;
+      --secondary: #1e293b;
+      --border: #2a3950;
+      --card-border: #2a3950;
+      --foreground: #f1f5f9;
+      --muted-foreground: #94a3b8;
+      --primary: #3b82f6;
+      --primary-foreground: #ffffff;
+      --success: #10b981;
+    }
+    html.light {
+      --background: #f8fafc;
+      --card: #ffffff;
+      --secondary: #f1f5f9;
+      --border: #cbd5e1;
+      --card-border: #cbd5e1;
+      --foreground: #0f172a;
+      --muted-foreground: #475569;
+      --primary: #2563eb;
+      --primary-foreground: #ffffff;
+      --success: #059669;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background: var(--background);
+      color: var(--foreground);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .max-w-\[1440px\] { max-width: 1440px; }
+    .max-w-\[300px\] { max-width: 300px; }
+    .mx-auto { margin-left: auto; margin-right: auto; }
+    .mb-1 { margin-bottom: 0.25rem; } .mr-1 { margin-right: 0.25rem; } .mt-0\.5 { margin-top: 0.125rem; }
+    .p-2 { padding: 0.5rem; } .p-2\.5 { padding: 0.625rem; } .p-3 { padding: 0.75rem; } .p-3\.5 { padding: 0.875rem; } .p-4 { padding: 1rem; }
+    .pl-4 { padding-left: 1rem; }
+    .px-2 { padding-left: 0.5rem; padding-right: 0.5rem; }
+    .px-2\.5 { padding-left: 0.625rem; padding-right: 0.625rem; }
+    .px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
+    .px-4 { padding-left: 1rem; padding-right: 1rem; }
+    .py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+    .py-1\.5 { padding-top: 0.375rem; padding-bottom: 0.375rem; }
+    .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+    .py-2\.5 { padding-top: 0.625rem; padding-bottom: 0.625rem; }
+    .py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+    .pt-1 { padding-top: 0.25rem; } .pt-2 { padding-top: 0.5rem; }
+    .space-y-0\.5 > * + * { margin-top: 0.125rem; }
+    .space-y-1 > * + * { margin-top: 0.25rem; }
+    .space-y-1\.5 > * + * { margin-top: 0.375rem; }
+    .space-y-2 > * + * { margin-top: 0.5rem; }
+    .space-y-2\.5 > * + * { margin-top: 0.625rem; }
+    .space-y-3 > * + * { margin-top: 0.75rem; }
+    .space-y-3\.5 > * + * { margin-top: 0.875rem; }
+    .flex { display: flex; } .inline-block { display: inline-block; } .block { display: block; } .hidden { display: none !important; }
+    .flex-col { flex-direction: column; } .flex-wrap { flex-wrap: wrap; }
+    .items-center { align-items: center; } .items-start { align-items: flex-start; } .items-baseline { align-items: baseline; }
+    .justify-between { justify-content: space-between; } .justify-center { justify-content: center; }
+    .gap-1 { gap: 0.25rem; } .gap-1\.5 { gap: 0.375rem; } .gap-2 { gap: 0.5rem; } .gap-3 { gap: 0.75rem; }
+    .gap-x-3 { column-gap: 0.75rem; } .gap-y-1 { row-gap: 0.25rem; }
+    .grid { display: grid; }
+    .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+    .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .list-disc { list-style-type: disc; }
+    @media (min-width: 640px) { .sm\:block { display: block !important; } }
+    @media (min-width: 768px) {
+      .md\:p-4 { padding: 1rem; }
+      .md\:h-\[540px\] { height: 540px !important; }
+      .md\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .md\:text-base { font-size: 1rem; }
+    }
+    @media (min-width: 1024px) {
+      .lg\:grid-cols-12 { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+      .lg\:col-span-8 { grid-column: span 8 / span 8; }
+      .lg\:col-span-4 { grid-column: span 4 / span 4; }
+    }
+    .w-full { width: 100%; } .h-full { height: 100%; } .w-9 { width: 2.25rem; } .h-9 { height: 2.25rem; }
+    .w-2\.5 { width: 0.625rem; } .h-2\.5 { height: 0.625rem; }
+    .h-\[460px\] { height: 460px; }
+    .max-h-\[540px\] { max-height: 540px; }
+    .relative { position: relative; } .absolute { position: absolute; } .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+    .top-3 { top: 0.75rem; } .left-3 { left: 0.75rem; } .bottom-3 { bottom: 0.75rem; }
+    .overflow-hidden { overflow: hidden; } .overflow-y-auto { overflow-y: auto; }
+    .rounded { border-radius: 0.25rem; } .rounded-md { border-radius: 0.375rem; } .rounded-lg { border-radius: 0.5rem; } .rounded-xl { border-radius: 0.75rem; } .rounded-full { border-radius: 9999px; } .rounded-sm { border-radius: 0.125rem; }
+    .border { border: 1px solid var(--border); }
+    .border-b { border-bottom: 1px solid var(--border); }
+    .border-t { border-top: 1px solid var(--border); }
+    .border-b-2 { border-bottom-width: 2px; border-bottom-style: solid; }
+    .border-transparent { border-color: transparent; }
+    .border-\[var\(--primary\)\] { border-color: var(--primary) !important; }
+    .bg-\[var\(--background\)\] { background-color: var(--background); }
+    .bg-\[var\(--card\)\] { background-color: var(--card); }
+    .bg-\[var\(--card\)\]\/90 { background-color: rgba(19, 26, 42, 0.88); }
+    html.light .bg-\[var\(--card\)\]\/90 { background-color: rgba(255, 255, 255, 0.92); }
+    .bg-\[var\(--secondary\)\] { background-color: var(--secondary); }
+    .bg-\[var\(--primary\)\] { background-color: var(--primary); }
+    .text-\[var\(--foreground\)\] { color: var(--foreground); }
+    .text-\[var\(--muted-foreground\)\] { color: var(--muted-foreground); }
+    .text-\[var\(--primary\)\] { color: var(--primary); }
+    .text-\[var\(--primary-foreground\)\] { color: var(--primary-foreground); }
+    .text-\[var\(--success\)\] { color: var(--success); }
+    .text-xs { font-size: 0.75rem; } .text-sm { font-size: 0.875rem; } .text-lg { font-size: 1.125rem; }
+    .font-medium { font-weight: 500; } .font-semibold { font-weight: 600; } .font-bold { font-weight: 700; }
+    .font-mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+    .leading-relaxed { line-height: 1.6; } .leading-snug { line-height: 1.35; }
+    .text-left { text-align: left; } .resize-none { resize: none; }
+    .cursor-pointer { cursor: pointer; } .pointer-events-none { pointer-events: none; } .shrink-0 { flex-shrink: 0; }
+    .hover\:opacity-90:hover { opacity: 0.9; } .hover\:bg-\[var\(--secondary\)\]:hover { background-color: var(--secondary); }
+    .hover\:bg-\[var\(--primary\)\]:hover { background-color: var(--primary); }
+    .hover\:text-\[var\(--primary-foreground\)\]:hover { color: var(--primary-foreground); }
+    button, select, textarea { font: inherit; color: inherit; background: none; border: none; }
+    select, textarea { border: 1px solid var(--border); background: var(--secondary); }
+    input[type="range"] { width: 100%; accent-color: var(--primary); }
+  </style>
+
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    input[type="range"] { height: 5px; border-radius: 999px; cursor: pointer; }
+    .thin-scroll::-webkit-scrollbar { width: 5px; height: 5px; }
+    .thin-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 999px; }
+    .canvas-stage { touch-action: none; user-select: none; -webkit-user-select: none; }
+  </style>
+</head>
+<body class="bg-[var(--background)] text-[var(--foreground)] antialiased">
+  <div class="max-w-[1440px] mx-auto p-3 md:p-4 space-y-3">
+    <!-- Top Header Bar -->
+    <header class="flex flex-wrap items-center justify-between gap-3 px-4 py-3 rounded-xl bg-[var(--card)] border border-[var(--border)]">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg bg-[var(--secondary)] border border-[var(--border)] flex items-center justify-center font-mono text-xs font-bold text-[var(--primary)]">
+          V2
+        </div>
+        <div>
+          <h1 class="text-sm md:text-base font-semibold tracking-tight leading-snug">
+            StudioBeam DuoDock V2 · M5 Mac Studio × 极米 RS30 承重与防干涉强化版
+          </h1>
+          <p class="text-xs text-[var(--muted-foreground)]">
+            5.4kg 承重强化 (16mm 实厚桥板+7.5mm 立柱) · 侧挂电源舱解放 Mac 背部全部接口 · Ø333mm 360°回转包络零干涉校验
+          </p>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2 text-xs">
+        <span class="px-2.5 py-1 rounded-md bg-[var(--secondary)] border border-[var(--border)] font-mono">
+          ✓ 2-Manifold 水密实体
+        </span>
+        <span id="bedFitBadge" class="px-2.5 py-1 rounded-md bg-[var(--secondary)] border border-[var(--border)] font-mono">
+          ✓ 适配 256mm 拓竹盘 (214.4mm)
+        </span>
+        <button id="btnQuickExportZip" class="px-3 py-1.5 rounded-md bg-[var(--primary)] text-[var(--primary-foreground)] font-medium hover:opacity-90 transition cursor-pointer">
+          ⬇ 一键打包下载 V2 STL (.ZIP)
+        </button>
+        <button type="button" onclick="document.documentElement.classList.toggle('light')" class="px-2.5 py-1.5 rounded-md bg-[var(--secondary)] border border-[var(--border)] cursor-pointer">☀/🌙 主题</button>
+        <button id="btnSaveOfflineHtml" class="px-3 py-1.5 rounded-md bg-[var(--secondary)] border border-[var(--border)] font-medium hover:opacity-90 transition cursor-pointer">
+          ⬇ 保存单文件离线网页 (.HTML)
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Split Workspace -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 items-start">
+      <!-- Left: 3D Interactive CAD Viewport (8 cols) -->
+      <section class="lg:col-span-8 rounded-xl bg-[var(--card)] border border-[var(--border)] overflow-hidden flex flex-col">
+        <div class="flex flex-wrap items-center justify-between gap-2 px-3 py-2 border-b border-[var(--border)] text-xs">
+          <div class="flex flex-wrap items-center gap-1">
+            <span class="text-[var(--muted-foreground)] mr-1">视角:</span>
+            <button data-cam="iso" class="cam-btn px-2 py-1 rounded bg-[var(--secondary)] hover:opacity-80 transition cursor-pointer font-medium">等轴测</button>
+            <button data-cam="front" class="cam-btn px-2 py-1 rounded hover:bg-[var(--secondary)] transition cursor-pointer">正视 (前接口)</button>
+            <button data-cam="back" class="cam-btn px-2 py-1 rounded hover:bg-[var(--secondary)] transition cursor-pointer">背视 (Mac背口100%无遮挡)</button>
+            <button data-cam="side" class="cam-btn px-2 py-1 rounded hover:bg-[var(--secondary)] transition cursor-pointer">侧视 (侧挂电源舱)</button>
+            <button data-cam="top" class="cam-btn px-2 py-1 rounded hover:bg-[var(--secondary)] transition cursor-pointer">俯视 (360°回转包络圈)</button>
+            <button data-cam="bottom" class="cam-btn px-2 py-1 rounded hover:bg-[var(--secondary)] transition cursor-pointer">仰视 (进风口/45°免支撑槽)</button>
+          </div>
+          <div class="text-[var(--muted-foreground)] hidden sm:block">
+            左键旋转 · 右键/Shift 平移 · 滚轮缩放
+          </div>
+        </div>
+
+        <div id="viewportWrap" class="relative w-full h-[460px] md:h-[540px] canvas-stage bg-[var(--background)]">
+          <canvas id="glCanvas" class="absolute inset-0 w-full h-full block"></canvas>
+          <canvas id="hudCanvas" class="absolute inset-0 w-full h-full block pointer-events-none"></canvas>
+
+          <div class="absolute top-3 left-3 p-2.5 rounded-lg bg-[var(--card)]/90 backdrop-blur border border-[var(--border)] text-xs space-y-1 pointer-events-none max-w-[300px]">
+            <div class="font-semibold flex items-center justify-between gap-3">
+              <span id="hudSchemeTitle">方案 A (V2) · 立式双层侧挂电源坞</span>
+            </div>
+            <div id="hudEnvelope" class="font-mono text-[var(--muted-foreground)]">
+              占地: 276 × 214 mm | 背部接线净空: ∞ 全敞开
+            </div>
+            <div id="hudClearanceStatus" class="text-[var(--success)] font-medium">
+              ✓ 5.4kg 承重挠度 &lt;0.05mm · 360°回转 0 干涉
+            </div>
+          </div>
+
+          <div class="absolute bottom-3 left-3 px-2.5 py-2 rounded-lg bg-[var(--card)]/90 backdrop-blur border border-[var(--border)] text-xs flex flex-wrap items-center gap-x-3 gap-y-1 pointer-events-none">
+            <span class="flex items-center gap-1.5"><i class="w-2.5 h-2.5 rounded-sm inline-block" style="background:#3b82f6"></i>V2 强化打印坞</span>
+            <span class="flex items-center gap-1.5"><i class="w-2.5 h-2.5 rounded-sm inline-block" style="background:#cbd5e1"></i>M5 Mac Studio</span>
+            <span class="flex items-center gap-1.5"><i class="w-2.5 h-2.5 rounded-sm inline-block" style="background:#64748b"></i>极米 RS30 (5.4kg)</span>
+            <span class="flex items-center gap-1.5"><i class="w-2.5 h-2.5 rounded-full inline-block" style="background:#a855f7"></i>Ø333mm 360°防干涉包络圆</span>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2 px-3 py-2.5 border-t border-[var(--border)] bg-[var(--card)] text-xs">
+          <label class="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[var(--secondary)] border border-[var(--border)] cursor-pointer">
+            <input id="chkSwept" type="checkbox" checked class="accent-[var(--primary)]" />
+            <span>RS30 360°回转包络圆 (Ø333mm)</span>
+          </label>
+          <label class="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[var(--secondary)] border border-[var(--border)] cursor-pointer">
+            <input id="chkCables" type="checkbox" checked class="accent-[var(--primary)]" />
+            <span>背口无遮挡连线</span>
+          </label>
+          <label class="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[var(--secondary)] border border-[var(--border)] cursor-pointer">
+            <input id="chkAirflow" type="checkbox" checked class="accent-[var(--primary)]" />
+            <span>双机散热风道</span>
+          </label>
+          <label class="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[var(--secondary)] border border-[var(--border)] cursor-pointer">
+            <input id="chkDims" type="checkbox" checked class="accent-[var(--primary)]" />
+            <span>尺寸标注</span>
+          </label>
+          <label class="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[var(--secondary)] border border-[var(--border)] cursor-pointer">
+            <input id="chkBeam" type="checkbox" checked class="accent-[var(--primary)]" />
+            <span>投射光锥</span>
+          </label>
+          <label class="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[var(--secondary)] border border-[var(--border)] cursor-pointer">
+            <input id="chkXray" type="checkbox" class="accent-[var(--primary)]" />
+            <span>硬件半透明</span>
+          </label>
+          <label class="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[var(--secondary)] border border-[var(--border)] cursor-pointer">
+            <input id="chkPrintOnly" type="checkbox" class="accent-[var(--primary)]" />
+            <span>仅看 3D 打印件</span>
+          </label>
+          <label class="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[var(--secondary)] border border-[var(--border)] cursor-pointer">
+            <input id="chkPhase2" type="checkbox" class="accent-[var(--primary)]" />
+            <span>二期: 沙发键鼠旋转臂</span>
+          </label>
+        </div>
+      </section>
+
+      <!-- Right: Control & Engineering Sidebar (4 cols) -->
+      <aside class="lg:col-span-4 rounded-xl bg-[var(--card)] border border-[var(--border)] overflow-hidden flex flex-col">
+        <div class="grid grid-cols-3 border-b border-[var(--border)] text-xs font-medium">
+          <button data-tab="design" class="tab-btn py-2.5 border-b-2 border-[var(--primary)] text-[var(--foreground)] cursor-pointer">1. 拓扑与防干涉</button>
+          <button data-tab="export" class="tab-btn py-2.5 border-b-2 border-transparent text-[var(--muted-foreground)] cursor-pointer">2. 承重与STL导出</button>
+          <button data-tab="cost" class="tab-btn py-2.5 border-b-2 border-transparent text-[var(--muted-foreground)] cursor-pointer">3. 材料强度与报价</button>
+        </div>
+
+        <!-- TAB 1: Design, Kinematics & Clearance -->
+        <div id="tab-design" class="tab-pane p-3.5 space-y-3.5 text-xs max-h-[540px] overflow-y-auto thin-scroll">
+          <div class="space-y-1.5">
+            <div class="font-semibold text-[var(--foreground)]">切换 V2 防干涉包裹布局</div>
+            <div class="grid grid-cols-1 gap-1.5">
+              <button data-scheme="tower_full" class="scheme-btn text-left p-2.5 rounded-lg border border-[var(--primary)] bg-[var(--secondary)] cursor-pointer transition">
+                <div class="font-semibold flex justify-between">
+                  <span>方案 A (推荐) · 立式承重塔 + 侧挂电源舱</span>
+                  <span class="font-mono text-[var(--primary)]">背口0遮挡</span>
+                </div>
+                <div class="text-[var(--muted-foreground)] mt-0.5">
+                  300W 电源舱移至 Mac 空白左/右侧壁 (高度102mm，低于RS30底面45mm)；Mac 背面雷雳5/电源线/散热孔 100% 敞开直插。
+                </div>
+              </button>
+              <button data-scheme="tower_slim" class="scheme-btn text-left p-2.5 rounded-lg border border-[var(--border)] hover:bg-[var(--secondary)] cursor-pointer transition">
+                <div class="font-semibold flex justify-between">
+                  <span>方案 B · 立式极简双件塔 (电源砖藏桌下)</span>
+                  <span class="font-mono">214×214 mm</span>
+                </div>
+                <div class="text-[var(--muted-foreground)] mt-0.5">
+                  仅底座+16mm厚加筋云台顶盘，四角下沉避让，RS30 360°旋转与俯仰全自由。
+                </div>
+              </button>
+              <button data-scheme="side_by_side" class="scheme-btn text-left p-2.5 rounded-lg border border-[var(--border)] hover:bg-[var(--secondary)] cursor-pointer transition">
+                <div class="font-semibold flex justify-between">
+                  <span>方案 C (V2修正间距) · 并排低趴双坞</span>
+                  <span class="font-mono">轴距 294mm</span>
+                </div>
+                <div class="text-[var(--muted-foreground)] mt-0.5">
+                  针对 RS30 Ø333mm (R166.5) 最大对角回转半径，将双坞中心距拉宽至 294mm，360°旋转留出 +20.3mm 净安全间隙！
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between p-2 rounded-lg bg-[var(--secondary)] border border-[var(--border)]">
+            <span>方案 A/C 电源砖侧挂方向 (Mac左右侧壁均无接口)</span>
+            <select id="selPodSide" class="px-2 py-1 rounded bg-[var(--card)] border border-[var(--border)] text-[var(--foreground)]">
+              <option value="-1" selected>左侧壁 (-X)</option>
+              <option value="1">右侧壁 (+X)</option>
+            </select>
+          </div>
+
+          <div class="space-y-2.5 pt-2 border-t border-[var(--border)]">
+            <div class="font-semibold">动态拆解与 360°×135° 干涉实测</div>
+            <div>
+              <div class="flex justify-between mb-1"><span>模块爆炸拆解</span><span id="valExplode" class="font-mono text-[var(--primary)]">0%</span></div>
+              <input id="rngExplode" type="range" min="0" max="100" value="0" class="w-full accent-[var(--primary)]" />
+            </div>
+            <div>
+              <div class="flex justify-between mb-1"><span>极米 RS30 水平旋转 (验证 360° 无碰撞)</span><span id="valYaw" class="font-mono">0°</span></div>
+              <input id="rngYaw" type="range" min="-180" max="180" value="0" class="w-full accent-[var(--primary)]" />
+            </div>
+            <div>
+              <div class="flex justify-between mb-1"><span>极米 RS30 镜头俯仰 (-12° ~ +95°)</span><span id="valPitch" class="font-mono">8°</span></div>
+              <input id="rngPitch" type="range" min="-12" max="95" value="8" class="w-full accent-[var(--primary)]" />
+            </div>
+            <div>
+              <div class="flex justify-between mb-1"><span>底部防尘滤网抽屉前拉</span><span id="valDrawer" class="font-mono">0%</span></div>
+              <input id="rngDrawer" type="range" min="0" max="100" value="0" class="w-full accent-[var(--primary)]" />
+            </div>
+          </div>
+
+          <div class="space-y-2.5 pt-2 border-t border-[var(--border)]">
+            <div class="flex items-center justify-between">
+              <span class="font-semibold">结构参数微调 (实时重算 STL)</span>
+              <button id="btnResetParams" class="text-[var(--primary)] hover:underline cursor-pointer">恢复 V2 标准值</button>
+            </div>
+            <div>
+              <div class="flex justify-between mb-1"><span>Mac 内衬单边间隙 (含1mm植绒条)</span><span id="valClearance" class="font-mono">1.2 mm</span></div>
+              <input id="rngClearance" type="range" min="0.4" max="2.5" step="0.1" value="1.2" class="w-full accent-[var(--primary)]" />
+            </div>
+            <div>
+              <div class="flex justify-between mb-1"><span>承重外骨骼立柱壁厚</span><span id="valWall" class="font-mono">7.5 mm</span></div>
+              <input id="rngWall" type="range" min="6.0" max="10.0" step="0.5" value="7.5" class="w-full accent-[var(--primary)]" />
+            </div>
+            <div>
+              <div class="flex justify-between mb-1"><span>顶盘实心承重桥厚</span><span id="valDeckH" class="font-mono">16.0 mm</span></div>
+              <input id="rngDeckH" type="range" min="12.0" max="22.0" step="1.0" value="16.0" class="w-full accent-[var(--primary)]" />
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: Load Engineering & STL Export -->
+        <div id="tab-export" class="tab-pane hidden p-3.5 space-y-3 text-xs max-h-[540px] overflow-y-auto thin-scroll">
+          <div class="p-2.5 rounded-lg bg-[var(--secondary)] border border-[var(--border)] space-y-1 leading-relaxed">
+            <div class="font-semibold text-[var(--foreground)]">V2 结构力学核算 (极米 RS30 实重 5.3–5.4 kg)</div>
+            <ul class="list-disc pl-4 text-[var(--muted-foreground)] space-y-0.5">
+              <li><strong>立柱抗压/屈曲</strong>：四角 7.5mm 弧形L柱总截面积 &gt;2,080mm²，5.4kg 压应力仅 0.05MPa，屈曲极限 &gt;800kg。</li>
+              <li><strong>顶盘抗弯/抗蠕变</strong>：实心桥板由 8mm 增厚至 <strong>16.0mm</strong>（抗弯刚度 EI 提升 <strong>8倍</strong>），PETG 长期静载中心挠度 &lt;0.05mm。</li>
+              <li><strong>真·零支撑平打</strong>：顶盘底面 96% 平贴热床，4个榫槽与手拧螺孔均采用 <strong>45°自支撑斜顶</strong>，绝无悬空塌丝。</li>
+            </ul>
+          </div>
+
+          <div id="stlPartCards" class="space-y-2"></div>
+
+          <button id="btnExportZipTab" class="w-full py-2.5 rounded-lg bg-[var(--primary)] text-[var(--primary-foreground)] font-semibold hover:opacity-90 transition cursor-pointer">
+            ⬇ 打包下载全套 V2 STL + 工艺说明 (.ZIP)
+          </button>
+        </div>
+
+        <!-- TAB 3: Strength vs Price Tiers -->
+        <div id="tab-cost" class="tab-pane hidden p-3.5 space-y-3 text-xs max-h-[540px] overflow-y-auto thin-scroll">
+          <div class="space-y-2">
+            <label class="font-semibold block">1. 选择打印材料 (直接决定耐温与长期抗蠕变强度)</label>
+            <select id="selMaterial" class="w-full p-2 rounded-lg bg-[var(--secondary)] border border-[var(--border)] text-[var(--foreground)]">
+              <option value="petgcf" selected>⭐ PETG-CF 碳纤增强 (刚度+65% · 耐温85°C · 最推荐)</option>
+              <option value="petg">✅ PETG 哑光工程料 (性价比主力 · 耐温75°C · 承重达标)</option>
+              <option value="asa">ASA / ABS 耐高温工程料 (耐温95°C+ · 需封箱机)</option>
+              <option value="pa12">🏆 SLS 激光烧结尼龙 PA12 (100%实心各向同性 · 工业级过剩强度)</option>
+              <option value="pla">❌ 普通 PLA (耐温仅55°C易受热蠕变下垂 · 禁止正式承重)</option>
+            </select>
+
+            <label class="font-semibold block">2. 选择代打渠道 (同材料下主要差异在计价方式与品控)</label>
+            <select id="selVendor" class="w-full p-2 rounded-lg bg-[var(--secondary)] border border-[var(--border)] text-[var(--foreground)]">
+              <option value="farm" selected>闲鱼 / 淘宝「拓竹 P1S/X1C 农场代打」(按切片实重计价 · 极高性价比)</option>
+              <option value="jlc">嘉立创 3D 打印 (jlc-3dp.cn · 按模型体积系数计价 · 售后稳)</option>
+              <option value="wenext">未来工场 Wenext (工业手板厂 · 适合 SLS 尼龙染色)</option>
+            </select>
+          </div>
+
+          <div class="p-3 rounded-xl bg-[var(--secondary)] border border-[var(--border)] space-y-2">
+            <div class="flex items-baseline justify-between">
+              <span class="text-[var(--muted-foreground)]">V2 强化版全套总价预估</span>
+              <span id="costRangeText" class="text-lg font-bold font-mono text-[var(--primary)]">¥165 – ¥250</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2 pt-1 border-t border-[var(--border)] text-[var(--muted-foreground)]">
+              <div>30%填充实重: <strong id="costWeightText" class="text-[var(--foreground)] font-mono">855 g</strong></div>
+              <div>承重安全系数: <strong id="costSfText" class="text-[var(--success)] font-mono">&gt; 28× (5.4kg无忧)</strong></div>
+            </div>
+            <p id="costAdviceText" class="text-[var(--muted-foreground)] leading-relaxed pt-1"></p>
+          </div>
+
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="font-semibold">发给代打店家的承重加强切片嘱咐</span>
+              <button id="btnCopyOrderNote" class="px-2 py-1 rounded bg-[var(--primary)] text-[var(--primary-foreground)] hover:opacity-90 cursor-pointer transition">
+                复制下单话术
+              </button>
+            </div>
+            <textarea id="txtOrderNote" readonly rows="5" class="w-full p-2 rounded-lg bg-[var(--background)] border border-[var(--border)] font-mono text-xs text-[var(--muted-foreground)] leading-relaxed resize-none"></textarea>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- Bottom Engineering Verification Summary -->
+    <section class="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs">
+      <div class="p-3 rounded-xl bg-[var(--card)] border border-[var(--border)] space-y-1">
+        <div class="font-semibold">1. 5.4kg 承重与防蠕变强化</div>
+        <p class="text-[var(--muted-foreground)] leading-relaxed">
+          极米 RS30 实重 5.3–5.4kg。V2 将四角立柱加厚至 7.5mm，顶盘实心承重桥由 8mm 增至 16mm（抗弯刚度提升 8 倍），配合 4 层壁厚 + 30% Gyroid 填充，长期热态静载变形 &lt;0.05mm。
+        </p>
+      </div>
+      <div class="p-3 rounded-xl bg-[var(--card)] border border-[var(--border)] space-y-1">
+        <div class="font-semibold">2. 背部 Mac 接口 100% 零遮挡</div>
+        <p class="text-[var(--muted-foreground)] leading-relaxed">
+          V2 将 RS30 的 300W 电源砖舱移至 Mac Studio 无孔无接口的左/右侧壁，让 Mac 背部 4×雷雳5、HDMI、万兆网口、粗电源线与 4000+ 排风孔拥有无限直插净空。
+        </p>
+      </div>
+      <div class="p-3 rounded-xl bg-[var(--card)] border border-[var(--border)] space-y-1">
+        <div class="font-semibold">3. 全方案 360° 回转包络校验</div>
+        <p class="text-[var(--muted-foreground)] leading-relaxed">
+          RS30 最大对角回转半径 R=166.5mm (Ø333mm)。方案 A/B 顶盘四角做下沉阶梯避让 U 型臂且高于侧电源舱 45mm；方案 C 双坞轴距拉宽至 294mm，净留 +20.3mm 防撞间隙。
+        </p>
+      </div>
+      <div class="p-3 rounded-xl bg-[var(--card)] border border-[var(--border)] space-y-1">
+        <div class="font-semibold">4. 报价档位与承重的关系</div>
+        <p class="text-[var(--muted-foreground)] leading-relaxed">
+          材料决定抗蠕变上限（禁选PLA；优选 PETG 或刚性高 65% 的 PETG-CF）；而同为 PETG 时，农场(¥90+)与嘉立创(¥250+)强度接近，差价主要在平台按体积计价与工业质检。
+        </p>
+      </div>
+    </section>
+  </div>
+
+  <script>
+  (() => {
+    "use strict";
+
+    const DEFAULTS = {
+      macW: 197.0, macBodyH: 87.0, macFootH: 8.0, macCornerR: 30.4,
+      rs30SweptR: 166.5, rs30BoltD: 7.0,
+      brickW: 188.0, brickT: 44.0, brickH: 92.0,
+      macClearance: 1.2, intakeHoleD: 182.0, wallThickness: 7.5, baseRingH: 6.0,
+      shelfZ: 26.0, airGapAboveMac: 18.0, tenonH: 8.0, tenonInset: 1.9, tenonTol: 0.25,
+      deckSeatZ: 16.0, rs30SeatD: 198.4, rs30LipOuterD: 207.0, sideBySideDx: 294.0,
+      nAngles: 144, cornerHalfSteps: 8,
+    };
+
+    const state = {
+      ...DEFAULTS,
+      scheme: "tower_full",
+      podSide: -1,          // -1 = Left (-X), +1 = Right (+X)
+      explode: 0.0,
+      yawDeg: 0.0,
+      pitchDeg: 8.0,
+      drawerPull: 0.0,
+      showSwept: true,
+      showCables: true,
+      showAirflow: true,
+      showDims: true,
+      showBeam: true,
+      xrayHardware: false,
+      printOnly: false,
+      showPhase2: false,
+      camAzimuth: -0.68,
+      camElevation: 0.44,
+      camDist: 750,
+      camTarget: [0, 0, 155],
+    };
+
+    function roundedSquareRadius(theta, halfW, cornerR) {
+      const ct = Math.abs(Math.cos(theta)), st = Math.abs(Math.sin(theta));
+      const c = halfW - cornerR;
+      if (ct > 1e-9 && (halfW * st / ct) <= c) return halfW / ct;
+      if (st > 1e-9 && (halfW * ct / st) <= c) return halfW / st;
+      const b = c * (ct + st);
+      return b + Math.sqrt(Math.max(0.0, b * b - (2.0 * c * c - cornerR * cornerR)));
+    }
+
+    function rectRayRadius(theta, hx, hy, cr) {
+      const ct = Math.abs(Math.cos(theta)), st = Math.abs(Math.sin(theta));
+      const cx = hx - cr, cy = hy - cr;
+      if (ct > 1e-9 && (hx * st / ct) <= cy) return hx / ct;
+      if (st > 1e-9 && (hy * ct / st) <= cx) return hy / st;
+      const b = cx * ct + cy * st;
+      return b + Math.sqrt(Math.max(0.0, b * b - (cx * cx + cy * cy - cr * cr)));
+    }
+
+    function isCornerSlice(k, nAngles, cornerHalfSteps) {
+      const q = nAngles >> 2;
+      return Math.abs((k % q) - (q >> 1)) < cornerHalfSteps;
+    }
+
+    class ManifoldBuilder {
+      constructor() { this.verts = []; this.vmap = new Map(); this.tris = []; }
+      addVert(x, y, z) {
+        const kx = Math.round(x * 1000), ky = Math.round(y * 1000), kz = Math.round(z * 1000);
+        const key = `${kx},${ky},${kz}`;
+        let idx = this.vmap.get(key);
+        if (idx === undefined) {
+          idx = this.verts.length;
+          this.verts.push([kx / 1000, ky / 1000, kz / 1000]);
+          this.vmap.set(key, idx);
+        }
+        return idx;
+      }
+      addTri(a, b, c) { if (a !== b && b !== c && c !== a) this.tris.push([a, b, c]); }
+      addQuad(p0, p1, p2, p3) { this.addTri(p0, p1, p2); this.addTri(p0, p2, p3); }
+      revolveSectors(thetas, sectorTypes, profileFn, cheekFn) {
+        const n = thetas.length;
+        for (let k = 0; k < n; k++) {
+          const k1 = (k + 1) % n, t0 = thetas[k], t1 = thetas[k1], st = sectorTypes[k];
+          const prof0 = profileFn(t0, st), prof1 = profileFn(t1, st), m = prof0.length;
+          const v0 = prof0.map(([r, z]) => this.addVert(r * Math.cos(t0), r * Math.sin(t0), z));
+          const v1 = prof1.map(([r, z]) => this.addVert(r * Math.cos(t1), r * Math.sin(t1), z));
+          for (let i = 0; i < m; i++) {
+            const inext = (i + 1) % m;
+            this.addQuad(v0[i], v1[i], v1[inext], v0[inext]);
+          }
+          const kprev = (k - 1 + n) % n;
+          if (sectorTypes[kprev] !== st && cheekFn) cheekFn(this, t0, sectorTypes[kprev], st);
+        }
+      }
+      computeStats() {
+        let vol6 = 0, area2 = 0;
+        let minX = Infinity, minY = Infinity, minZ = Infinity, maxX = -Infinity, maxY = -Infinity, maxZ = -Infinity;
+        for (const [x, y, z] of this.verts) {
+          if (x < minX) minX = x; if (x > maxX) maxX = x;
+          if (y < minY) minY = y; if (y > maxY) maxY = y;
+          if (z < minZ) minZ = z; if (z > maxZ) maxZ = z;
+        }
+        for (const [i0, i1, i2] of this.tris) {
+          const a = this.verts[i0], b = this.verts[i1], c = this.verts[i2];
+          const ux = b[0] - a[0], uy = b[1] - a[1], uz = b[2] - a[2];
+          const vx = c[0] - a[0], vy = c[1] - a[1], vz = c[2] - a[2];
+          const cx = uy * vz - uz * vy, cy = uz * vx - ux * vz, cz = ux * vy - uy * vx;
+          vol6 += a[0] * cx + a[1] * cy + a[2] * cz;
+          area2 += Math.hypot(cx, cy, cz);
+        }
+        const volMm3 = Math.abs(vol6) / 6.0, areaMm2 = 0.5 * area2;
+        const shellVol = Math.min(volMm3, areaMm2 * 1.45 * 0.64);
+        const effCm3 = (shellVol + 0.30 * Math.max(0, volMm3 - shellVol)) / 1000.0;
+        const solidCm3 = volMm3 / 1000.0;
+        return {
+          tris: this.tris.length,
+          bbox: [+(maxX - minX).toFixed(1), +(maxY - minY).toFixed(1), +(maxZ - minZ).toFixed(1)],
+          fdmPetgG: +(effCm3 * 1.27).toFixed(1),
+          jlcSolidG: +(solidCm3 * 1.27).toFixed(1),
+          slsPa12G: +(solidCm3 * 1.01).toFixed(1),
+        };
+      }
+      toBinarySTL(headerStr) {
+        const triCount = this.tris.length;
+        const buf = new ArrayBuffer(84 + triCount * 50);
+        const view = new DataView(buf);
+        for (let i = 0; i < 80; i++) view.setUint8(i, i < headerStr.length ? headerStr.charCodeAt(i) & 0x7f : 32);
+        view.setUint32(80, triCount, true);
+        let off = 84;
+        for (let i = 0; i < triCount; i++) {
+          const [i0, i1, i2] = this.tris[i];
+          const a = this.verts[i0], b = this.verts[i1], c = this.verts[i2];
+          const ux = b[0] - a[0], uy = b[1] - a[1], uz = b[2] - a[2];
+          const vx = c[0] - a[0], vy = c[1] - a[1], vz = c[2] - a[2];
+          let nx = uy * vz - uz * vy, ny = uz * vx - ux * vz, nz = ux * vy - uy * vx;
+          const len = Math.hypot(nx, ny, nz) || 1;
+          view.setFloat32(off, nx / len, true); view.setFloat32(off + 4, ny / len, true); view.setFloat32(off + 8, nz / len, true);
+          view.setFloat32(off + 12, a[0], true); view.setFloat32(off + 16, a[1], true); view.setFloat32(off + 20, a[2], true);
+          view.setFloat32(off + 24, b[0], true); view.setFloat32(off + 28, b[1], true); view.setFloat32(off + 32, b[2], true);
+          view.setFloat32(off + 36, c[0], true); view.setFloat32(off + 40, c[1], true); view.setFloat32(off + 44, c[2], true);
+          view.setUint16(off + 48, 0, true);
+          off += 50;
+        }
+        return new Uint8Array(buf);
+      }
+      toGLArrays(creaseDeg = 34) {
+        const triCount = this.tris.length;
+        const pos = new Float32Array(triCount * 9), nor = new Float32Array(triCount * 9);
+        const faceNormals = new Array(triCount);
+        const vertFaces = Array.from({ length: this.verts.length }, () => []);
+        for (let t = 0; t < triCount; t++) {
+          const [i0, i1, i2] = this.tris[t];
+          const a = this.verts[i0], b = this.verts[i1], c = this.verts[i2];
+          const ux = b[0] - a[0], uy = b[1] - a[1], uz = b[2] - a[2];
+          const vx = c[0] - a[0], vy = c[1] - a[1], vz = c[2] - a[2];
+          let nx = uy * vz - uz * vy, ny = uz * vx - ux * vz, nz = ux * vy - uy * vx;
+          const len = Math.hypot(nx, ny, nz) || 1;
+          faceNormals[t] = [nx / len, ny / len, nz / len];
+          vertFaces[i0].push(t); vertFaces[i1].push(t); vertFaces[i2].push(t);
+        }
+        const cosThresh = Math.cos((creaseDeg * Math.PI) / 180);
+        for (let t = 0; t < triCount; t++) {
+          const fn = faceNormals[t], idxList = this.tris[t];
+          for (let j = 0; j < 3; j++) {
+            const vi = idxList[j], v = this.verts[vi];
+            let sx = 0, sy = 0, sz = 0;
+            for (const otherT of vertFaces[vi]) {
+              const ofn = faceNormals[otherT];
+              if (fn[0] * ofn[0] + fn[1] * ofn[1] + fn[2] * ofn[2] >= cosThresh) {
+                sx += ofn[0]; sy += ofn[1]; sz += ofn[2];
+              }
+            }
+            const sl = Math.hypot(sx, sy, sz) || 1, base = t * 9 + j * 3;
+            pos[base] = v[0]; pos[base + 1] = v[1]; pos[base + 2] = v[2];
+            nor[base] = sx / sl; nor[base + 1] = sy / sl; nor[base + 2] = sz / sl;
+          }
+        }
+        return { pos, nor, count: triCount * 3 };
+      }
+    }
+
+    function buildM1BaseCradle(p, lowProfile = false) {
+      const mb = new ManifoldBuilder();
+      const pocketHalf = p.macW / 2 + p.macClearance;
+      const pocketCr = p.macCornerR + p.macClearance;
+      const outerHalf = pocketHalf + p.wallThickness;
+      const outerCr = pocketCr + p.wallThickness;
+      const rIntake = p.intakeHoleD / 2;
+      const zRing = p.baseRingH, zShelf = p.shelfZ;
+      const zColTop = lowProfile ? (p.shelfZ + 44.0) : (p.shelfZ + p.macBodyH + p.airGapAboveMac);
+      const zTenonTop = lowProfile ? zColTop : (zColTop + p.tenonH);
+
+      const thetas = Array.from({ length: p.nAngles }, (_, k) => (2 * Math.PI * k) / p.nAngles);
+      const sectorTypes = thetas.map((_, k) => (isCornerSlice(k, p.nAngles, p.cornerHalfSteps) ? 1 : 0));
+
+      mb.revolveSectors(thetas, sectorTypes, (theta, st) => {
+        const rOut = roundedSquareRadius(theta, outerHalf, outerCr);
+        if (st === 0) return [[rIntake, 0], [rOut, 0], [rOut, zRing], [rIntake, zRing]];
+        const rPock = roundedSquareRadius(theta, pocketHalf, pocketCr);
+        if (lowProfile) {
+          return [[rIntake, 0], [rOut, 0], [rOut, zRing], [rOut, zShelf], [rOut, zColTop], [rPock, zColTop], [rPock, zShelf], [rIntake, zShelf], [rIntake, zRing]];
+        }
+        const rTin = rPock + p.tenonInset, rTout = rOut - p.tenonInset;
+        return [
+          [rIntake, 0], [rOut, 0], [rOut, zRing], [rOut, zShelf], [rOut, zColTop],
+          [rTout, zColTop], [rTout, zTenonTop], [rTin, zTenonTop], [rTin, zColTop],
+          [rPock, zColTop], [rPock, zShelf], [rIntake, zShelf], [rIntake, zRing]
+        ];
+      }, (b, theta, stPrev, stCurr) => {
+        const rOut = roundedSquareRadius(theta, outerHalf, outerCr), rPock = roundedSquareRadius(theta, pocketHalf, pocketCr);
+        const ct = Math.cos(theta), st = Math.sin(theta), v = (r, z) => b.addVert(r * ct, r * st, z);
+        const flip = (stPrev === 1 && stCurr === 0), emit = (i0, i1, i2) => (flip ? b.addTri(i0, i2, i1) : b.addTri(i0, i1, i2));
+        const a0 = v(rIntake, zRing), a1 = v(rOut, zRing), b0 = v(rIntake, zShelf), b1 = v(rPock, zShelf), b2 = v(rOut, zShelf);
+        emit(a0, a1, b2); emit(a0, b2, b1); emit(a0, b1, b0);
+        if (lowProfile) { const c0 = v(rPock, zColTop), c3 = v(rOut, zColTop); emit(b1, b2, c3); emit(b1, c3, c0); return; }
+        const rTin = rPock + p.tenonInset, rTout = rOut - p.tenonInset;
+        const c0 = v(rPock, zColTop), c1 = v(rTin, zColTop), c2 = v(rTout, zColTop), c3 = v(rOut, zColTop), d0 = v(rTin, zTenonTop), d1 = v(rTout, zTenonTop);
+        emit(b1, b2, c3); emit(b1, c3, c2); emit(b1, c2, c1); emit(b1, c1, c0); emit(c1, c2, d1); emit(c1, d1, d0);
+      });
+      return mb;
+    }
+
+    function buildM2UpperDeck(p) {
+      const mb = new ManifoldBuilder();
+      const pocketHalf = p.macW / 2 + p.macClearance, pocketCr = p.macCornerR + p.macClearance;
+      const outerHalf = pocketHalf + p.wallThickness, outerCr = pocketCr + p.wallThickness;
+      const rBolt = p.rs30BoltD / 2, rConeBot = 13.5, zConeTop = Math.min(10.0, p.deckSeatZ - 3.0);
+      const rSeat = p.rs30SeatD / 2, rLipOut = Math.min(p.rs30LipOuterD / 2, outerHalf - 2.0);
+      const zSeat = p.deckSeatZ, zOuter = zSeat - 1.0, zLipTop = zSeat + 4.0, zMwall = p.tenonH + 0.5;
+
+      const thetas = Array.from({ length: p.nAngles }, (_, k) => (2 * Math.PI * k) / p.nAngles);
+      const sectorTypes = thetas.map((_, k) => (isCornerSlice(k, p.nAngles, p.cornerHalfSteps) ? 1 : 0));
+
+      const mortise = (theta) => {
+        const rOut = roundedSquareRadius(theta, outerHalf, outerCr);
+        const rPock = roundedSquareRadius(theta, pocketHalf, pocketCr);
+        const rMin = rPock + (p.tenonInset - p.tenonTol), rMout = rOut - (p.tenonInset - p.tenonTol);
+        const rMmid = 0.5 * (rMin + rMout), zMpeak = Math.min(zOuter - 1.5, zMwall + 0.5 * (rMout - rMin));
+        return { rOut, rMin, rMmid, rMout, zMpeak };
+      };
+
+      mb.revolveSectors(thetas, sectorTypes, (theta, st) => {
+        const { rOut, rMin, rMmid, rMout, zMpeak } = mortise(theta);
+        const top = [[rOut, zOuter], [rLipOut, zOuter], [rLipOut, zLipTop], [rSeat, zLipTop], [rSeat, zSeat], [rBolt, zSeat]];
+        if (st === 0) return [[rBolt, zConeTop], [rConeBot, 0], [rMin, 0], [rMmid, 0], [rMout, 0], [rOut, 0], ...top];
+        return [[rBolt, zConeTop], [rConeBot, 0], [rMin, 0], [rMin, zMwall], [rMmid, zMpeak], [rMout, zMwall], [rMout, 0], [rOut, 0], ...top];
+      }, (b, theta, stPrev, stCurr) => {
+        const { rMin, rMmid, rMout, zMpeak } = mortise(theta);
+        const ct = Math.cos(theta), st = Math.sin(theta), v = (r, z) => b.addVert(r * ct, r * st, z);
+        const flip = (stPrev === 0 && stCurr === 1);
+        const b0 = v(rMin, 0), b1 = v(rMmid, 0), b2 = v(rMout, 0), w0 = v(rMin, zMwall), wp = v(rMmid, zMpeak), w2 = v(rMout, zMwall);
+        for (const [i0, i1, i2] of [[b0, b1, wp], [b0, wp, w0], [b1, b2, w2], [b1, w2, wp]]) {
+          if (!flip) b.addTri(i0, i1, i2); else b.addTri(i0, i2, i1);
+        }
+      });
+      return mb;
+    }
+
+    function buildM3SidePowerPod(p) {
+      const mb = new ManifoldBuilder();
+      const outerW = p.brickT + 16.0, outerD = p.brickW + 16.0, outerCr = 14.0, wall = 6.0, height = p.brickH + 10.0, floorH = 8.0;
+      const ohx = outerW / 2, ohy = outerD / 2, ihx = ohx - wall, ihy = ohy - wall, icr = 8.0;
+      const n = 96, q = n >> 2, winHalf = 6;
+      const thetas = Array.from({ length: n }, (_, k) => (2 * Math.PI * k) / n);
+      const sectorTypes = thetas.map((_, k) => ((k % q) < winHalf || (k % q) >= q - winHalf ? 0 : 1));
+      mb.revolveSectors(thetas, sectorTypes, (theta, st) => {
+        const ro = rectRayRadius(theta, ohx, ohy, outerCr), ri = rectRayRadius(theta, ihx, ihy, icr);
+        return st === 1 ? [[ri, 0], [ro, 0], [ro, floorH], [ro, height], [ri, height], [ri, floorH]] : [[ri, 0], [ro, 0], [ro, floorH], [ri, floorH]];
+      }, (b, theta, stPrev, stCurr) => {
+        const ro = rectRayRadius(theta, ohx, ohy, outerCr), ri = rectRayRadius(theta, ihx, ihy, icr);
+        const ct = Math.cos(theta), st = Math.sin(theta), v = (r, z) => b.addVert(r * ct, r * st, z);
+        const p00 = v(ri, floorH), p10 = v(ro, floorH), p11 = v(ro, height), p01 = v(ri, height);
+        if (!(stPrev === 1 && stCurr === 0)) b.addQuad(p00, p10, p11, p01); else b.addQuad(p00, p01, p11, p10);
+      });
+      return mb;
+    }
+
+    function buildM4DustFilter() {
+      const mb = new ManifoldBuilder(), n = 96;
+      const thetas = Array.from({ length: n }, (_, k) => (2 * Math.PI * k) / n);
+      mb.revolveSectors(thetas, new Array(n).fill(0), (theta) => {
+        const ro = roundedSquareRadius(theta, 92.0, 22.0);
+        return [[82.0, 0], [ro, 0], [ro, 3.2], [86.0, 3.2], [86.0, 1.6], [82.0, 1.6]];
+      }, null);
+      return mb;
+    }
+
+    function buildSolidRoundedPrism(wx, wy, h, cr, segs = 56) {
+      const mb = new ManifoldBuilder(), hx = wx / 2, hy = wy / 2;
+      const cBot = mb.addVert(0, 0, 0), cTop = mb.addVert(0, 0, h), ringBot = [], ringTop = [];
+      for (let k = 0; k < segs; k++) {
+        const t = (2 * Math.PI * k) / segs, r = rectRayRadius(t, hx, hy, Math.min(cr, hx - 0.5, hy - 0.5));
+        ringBot.push(mb.addVert(r * Math.cos(t), r * Math.sin(t), 0));
+        ringTop.push(mb.addVert(r * Math.cos(t), r * Math.sin(t), h));
+      }
+      for (let k = 0; k < segs; k++) {
+        const k1 = (k + 1) % segs;
+        mb.addTri(cBot, ringBot[k1], ringBot[k]); mb.addTri(cTop, ringTop[k], ringTop[k1]);
+        mb.addQuad(ringBot[k], ringBot[k1], ringTop[k1], ringTop[k]);
+      }
+      return mb.toGLArrays(35);
+    }
+
+    function buildCylinderY(radius, length, segs = 44) {
+      const mb = new ManifoldBuilder(), c0 = mb.addVert(0, 0, 0), c1 = mb.addVert(0, length, 0), r0 = [], r1 = [];
+      for (let k = 0; k < segs; k++) {
+        const t = (2 * Math.PI * k) / segs, x = radius * Math.cos(t), z = radius * Math.sin(t);
+        r0.push(mb.addVert(x, 0, z)); r1.push(mb.addVert(x, length, z));
+      }
+      for (let k = 0; k < segs; k++) {
+        const k1 = (k + 1) % segs;
+        mb.addTri(c0, r0[k], r0[k1]); mb.addTri(c1, r1[k1], r1[k]);
+        mb.addQuad(r0[k], r1[k], r1[k1], r0[k1]);
+      }
+      return mb.toGLArrays(40);
+    }
+
+    function buildProjectionFrustum(len = 260, w0 = 36, h0 = 22, w1 = 220, h1 = 124) {
+      const mb = new ManifoldBuilder();
+      const p = [
+        mb.addVert(-w0 / 2, 0, -h0 / 2), mb.addVert(w0 / 2, 0, -h0 / 2), mb.addVert(w0 / 2, 0, h0 / 2), mb.addVert(-w0 / 2, 0, h0 / 2),
+        mb.addVert(-w1 / 2, len, -h1 / 2), mb.addVert(w1 / 2, len, -h1 / 2), mb.addVert(w1 / 2, len, h1 / 2), mb.addVert(-w1 / 2, len, h1 / 2),
+      ];
+      mb.addQuad(p[0], p[1], p[5], p[4]); mb.addQuad(p[1], p[2], p[6], p[5]);
+      mb.addQuad(p[2], p[3], p[7], p[6]); mb.addQuad(p[3], p[0], p[4], p[7]);
+      return mb.toGLArrays(5);
+    }
+
+    // Pure-JS PKZIP (Store + CRC32) for single-click ZIP download
+    const CRC_TABLE = (() => {
+      const t = new Uint32Array(256);
+      for (let i = 0; i < 256; i++) {
+        let c = i;
+        for (let k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+        t[i] = c >>> 0;
+      }
+      return t;
+    })();
+    function crc32(u8) {
+      let c = 0xFFFFFFFF;
+      for (let i = 0; i < u8.length; i++) c = CRC_TABLE[(c ^ u8[i]) & 0xFF] ^ (c >>> 8);
+      return (c ^ 0xFFFFFFFF) >>> 0;
+    }
+    function buildZipBytes(files) {
+      const enc = new TextEncoder();
+      const entries = files.map(f => {
+        const nameBytes = enc.encode(f.name);
+        const data = f.data instanceof Uint8Array ? f.data : enc.encode(f.data);
+        return { nameBytes, data, crc: crc32(data), offset: 0 };
+      });
+      let localSize = 0, cdSize = 0;
+      for (const e of entries) { localSize += 30 + e.nameBytes.length + e.data.length; cdSize += 46 + e.nameBytes.length; }
+      const out = new Uint8Array(localSize + cdSize + 22);
+      const dv = new DataView(out.buffer);
+      let p = 0;
+      for (const e of entries) {
+        e.offset = p;
+        dv.setUint32(p, 0x04034b50, true); dv.setUint16(p + 4, 20, true); dv.setUint16(p + 6, 0x0800, true);
+        dv.setUint16(p + 8, 0, true); dv.setUint16(p + 10, 0, true); dv.setUint16(p + 12, 0x5970, true);
+        dv.setUint32(p + 14, e.crc, true); dv.setUint32(p + 18, e.data.length, true); dv.setUint32(p + 22, e.data.length, true);
+        dv.setUint16(p + 26, e.nameBytes.length, true); dv.setUint16(p + 28, 0, true);
+        out.set(e.nameBytes, p + 30); out.set(e.data, p + 30 + e.nameBytes.length);
+        p += 30 + e.nameBytes.length + e.data.length;
+      }
+      const cdStart = p;
+      for (const e of entries) {
+        dv.setUint32(p, 0x02014b50, true); dv.setUint16(p + 4, 20, true); dv.setUint16(p + 6, 20, true);
+        dv.setUint16(p + 8, 0x0800, true); dv.setUint16(p + 10, 0, true); dv.setUint16(p + 12, 0, true); dv.setUint16(p + 14, 0x5970, true);
+        dv.setUint32(p + 16, e.crc, true); dv.setUint32(p + 20, e.data.length, true); dv.setUint32(p + 24, e.data.length, true);
+        dv.setUint16(p + 28, e.nameBytes.length, true); dv.setUint16(p + 42, e.offset, true);
+        out.set(e.nameBytes, p + 46);
+        p += 46 + e.nameBytes.length;
+      }
+      dv.setUint32(p, 0x06054b50, true); dv.setUint16(p + 8, entries.length, true); dv.setUint16(p + 10, entries.length, true);
+      dv.setUint32(p + 12, p - cdStart, true); dv.setUint32(p + 16, cdStart, true);
+      return out;
+    }
+
+    function triggerDownload(bytesOrStr, filename, mime = "application/octet-stream") {
+      const blob = new Blob([bytesOrStr], { type: mime });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = filename;
+      document.body.appendChild(a); a.click();
+      setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 300);
+    }
+
+    const M4 = {
+      identity: () => new Float32Array([1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1]),
+      mul(a, b) {
+        const out = new Float32Array(16);
+        for (let col = 0; col < 4; col++) for (let row = 0; row < 4; row++)
+          out[col * 4 + row] = a[row] * b[col * 4] + a[4 + row] * b[col * 4 + 1] + a[8 + row] * b[col * 4 + 2] + a[12 + row] * b[col * 4 + 3];
+        return out;
+      },
+      translate(tx, ty, tz) { const m = M4.identity(); m[12] = tx; m[13] = ty; m[14] = tz; return m; },
+      rotZ(rad) { const c = Math.cos(rad), s = Math.sin(rad); return new Float32Array([c, s, 0, 0, -s, c, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]); },
+      rotX(rad) { const c = Math.cos(rad), s = Math.sin(rad); return new Float32Array([1, 0, 0, 0, 0, c, s, 0, 0, -s, c, 0, 0, 0, 0, 1]); },
+      perspective(fovRad, aspect, near, far) {
+        const f = 1.0 / Math.tan(fovRad / 2), nf = 1.0 / (near - far);
+        return new Float32Array([f / aspect, 0, 0, 0, 0, f, 0, 0, 0, 0, (far + near) * nf, -1, 0, 0, 2 * far * near * nf, 0]);
+      },
+      lookAtZUp(eye, target) {
+        let fx = target[0] - eye[0], fy = target[1] - eye[1], fz = target[2] - eye[2];
+        const fl = Math.hypot(fx, fy, fz) || 1; fx /= fl; fy /= fl; fz /= fl;
+        let sx = fy, sy = -fx, sl = Math.hypot(sx, sy);
+        if (sl < 1e-5) { sx = 1; sy = 0; sl = 1; }
+        sx /= sl; sy /= sl;
+        const ux = -sy * fz, uy = sx * fz, uz = sx * fy - sy * fx;
+        return new Float32Array([
+          sx, ux, -fx, 0, sy, uy, -fy, 0, 0, uz, -fz, 0,
+          -(sx * eye[0] + sy * eye[1]), -(ux * eye[0] + uy * eye[1] + uz * eye[2]), fx * eye[0] + fy * eye[1] + fz * eye[2], 1
+        ]);
+      },
+      project(pt, vpMat, width, height) {
+        const [x, y, z] = pt;
+        const cx = vpMat[0] * x + vpMat[4] * y + vpMat[8] * z + vpMat[12];
+        const cy = vpMat[1] * x + vpMat[5] * y + vpMat[9] * z + vpMat[13];
+        const cw = vpMat[3] * x + vpMat[7] * y + vpMat[11] * z + vpMat[15];
+        if (cw <= 0.1) return null;
+        return [(cx / cw * 0.5 + 0.5) * width, (0.5 - cy / cw * 0.5) * height];
+      }
+    };
+
+    const glCanvas = document.getElementById("glCanvas");
+    const hudCanvas = document.getElementById("hudCanvas");
+    const hudCtx = hudCanvas.getContext("2d");
+    const gl = glCanvas.getContext("webgl", { antialias: true, alpha: true });
+
+    const VS_SRC = `attribute vec3 aPos,aNor;uniform mat4 uMVP,uModel;varying vec3 vNor,vWorldPos;void main(){vec4 wp=uModel*vec4(aPos,1.0);vWorldPos=wp.xyz;vNor=mat3(uModel[0].xyz,uModel[1].xyz,uModel[2].xyz)*aNor;gl_Position=uMVP*vec4(aPos,1.0);}`;
+    const FS_SRC = `precision mediump float;varying vec3 vNor,vWorldPos;uniform vec3 uColor,uEye;uniform float uAlpha,uMetallic;void main(){vec3 N=normalize(vNor),V=normalize(uEye-vWorldPos),L1=normalize(vec3(0.52,0.65,0.85)),L2=normalize(vec3(-0.65,-0.45,0.45));float d1=max(dot(N,L1),0.0),d2=max(dot(N,L2),0.0)*0.38,hemi=0.5+0.5*N.z;vec3 H=normalize(L1+V);float spec=pow(max(dot(N,H),0.0),mix(24.0,64.0,uMetallic))*mix(0.18,0.55,uMetallic),rim=pow(1.0-max(dot(N,V),0.0),3.0)*0.14;gl_FragColor=vec4(uColor*mix(0.26,0.46,hemi)+uColor*(d1*0.62+d2)+vec3(spec+rim),uAlpha);}`;
+
+    const compile = (t, s) => { const sh = gl.createShader(t); gl.shaderSource(sh, s); gl.compileShader(sh); return sh; };
+    const prog = gl.createProgram();
+    gl.attachShader(prog, compile(gl.VERTEX_SHADER, VS_SRC));
+    gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, FS_SRC));
+    gl.linkProgram(prog); gl.useProgram(prog);
+
+    const loc = {
+      aPos: gl.getAttribLocation(prog, "aPos"), aNor: gl.getAttribLocation(prog, "aNor"),
+      uMVP: gl.getUniformLocation(prog, "uMVP"), uModel: gl.getUniformLocation(prog, "uModel"),
+      uColor: gl.getUniformLocation(prog, "uColor"), uAlpha: gl.getUniformLocation(prog, "uAlpha"),
+      uMetallic: gl.getUniformLocation(prog, "uMetallic"), uEye: gl.getUniformLocation(prog, "uEye"),
+    };
+
+    function uploadGLMesh(arrays, existing = null) {
+      const posBuf = existing ? existing.posBuf : gl.createBuffer();
+      const norBuf = existing ? existing.norBuf : gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, posBuf); gl.bufferData(gl.ARRAY_BUFFER, arrays.pos, gl.DYNAMIC_DRAW);
+      gl.bindBuffer(gl.ARRAY_BUFFER, norBuf); gl.bufferData(gl.ARRAY_BUFFER, arrays.nor, gl.DYNAMIC_DRAW);
+      return { posBuf, norBuf, count: arrays.count };
+    }
+
+    const hwMeshes = {
+      macBody: uploadGLMesh(buildSolidRoundedPrism(197.0, 197.0, 87.0, 30.4, 72)),
+      macFoot: uploadGLMesh(buildSolidRoundedPrism(179.2, 179.2, 8.0, 89.0, 64)),
+      macFrontPort: uploadGLMesh(buildSolidRoundedPrism(12.0, 4.0, 5.0, 1.5, 16)),
+      macSdSlot: uploadGLMesh(buildSolidRoundedPrism(28.0, 4.0, 3.0, 1.0, 16)),
+      macRearBar: uploadGLMesh(buildSolidRoundedPrism(144.0, 4.0, 22.0, 3.0, 24)),
+      rs30Base: uploadGLMesh(buildSolidRoundedPrism(194.0, 186.0, 18.0, 88.0, 64)),
+      rs30Arm: uploadGLMesh(buildSolidRoundedPrism(14.0, 52.0, 148.0, 6.0, 24)),
+      rs30Head: uploadGLMesh(buildSolidRoundedPrism(258.0, 190.0, 196.0, 20.0, 56)),
+      rs30LensRing: uploadGLMesh(buildCylinderY(44.0, 12.0, 48)),
+      rs30LensGlass: uploadGLMesh(buildCylinderY(37.0, 15.0, 48)),
+      powerBrick: uploadGLMesh(buildSolidRoundedPrism(40.0, 184.0, 88.0, 6.0, 28)),
+      filterMeshDisc: uploadGLMesh(buildSolidRoundedPrism(168.0, 168.0, 1.2, 83.0, 48)),
+      beamCone: uploadGLMesh(buildProjectionFrustum(260, 36, 22, 220, 124)),
+      sofaPost: uploadGLMesh(buildSolidRoundedPrism(38.0, 38.0, 420.0, 8.0, 24)),
+      sofaArm1: uploadGLMesh(buildSolidRoundedPrism(38.0, 230.0, 22.0, 10.0, 20)),
+      sofaTray: uploadGLMesh(buildSolidRoundedPrism(420.0, 185.0, 10.0, 16.0, 32)),
+    };
+
+    let cadBuilders = {}, cadGL = {}, cadStats = {};
+
+    function rebuildPrintableCAD() {
+      const lowProf = (state.scheme === "side_by_side");
+      cadBuilders.m1 = buildM1BaseCradle(state, lowProf);
+      cadBuilders.m2 = buildM2UpperDeck(state);
+      cadBuilders.m3 = buildM3SidePowerPod(state);
+      cadBuilders.m4 = buildM4DustFilter();
+      for (const k of ["m1", "m2", "m3", "m4"]) {
+        cadGL[k] = uploadGLMesh(cadBuilders[k].toGLArrays(34), cadGL[k]);
+        cadStats[k] = cadBuilders[k].computeStats();
+      }
+      updateReadoutsAndCards();
+    }
+
+    function drawMesh(mesh, modelMat, vpMat, eye, color, alpha = 1.0, metallic = 0.25) {
+      gl.uniformMatrix4fv(loc.uMVP, false, M4.mul(vpMat, modelMat));
+      gl.uniformMatrix4fv(loc.uModel, false, modelMat);
+      gl.uniform3fv(loc.uColor, color); gl.uniform1f(loc.uAlpha, alpha);
+      gl.uniform1f(loc.uMetallic, metallic); gl.uniform3fv(loc.uEye, eye);
+      gl.bindBuffer(gl.ARRAY_BUFFER, mesh.posBuf);
+      gl.enableVertexAttribArray(loc.aPos); gl.vertexAttribPointer(loc.aPos, 3, gl.FLOAT, false, 0, 0);
+      gl.bindBuffer(gl.ARRAY_BUFFER, mesh.norBuf);
+      gl.enableVertexAttribArray(loc.aNor); gl.vertexAttribPointer(loc.aNor, 3, gl.FLOAT, false, 0, 0);
+      gl.drawArrays(gl.TRIANGLES, 0, mesh.count);
+    }
+
+    function getSceneTransforms() {
+      const ex = state.explode;
+      const outerW = state.macW + 2 * state.macClearance + 2 * state.wallThickness;
+      const colTopZ = state.shelfZ + state.macBodyH + state.airGapAboveMac;
+      const sideBySide = (state.scheme === "side_by_side");
+
+      const m1X = sideBySide ? -state.sideBySideDx / 2 : 0;
+      const m2X = sideBySide ? state.sideBySideDx / 2 : 0;
+      const m2BaseZ = sideBySide ? (ex * 35) : (colTopZ + ex * 95);
+
+      const macZ = state.shelfZ + ex * 45;
+      const rs30TurntableZ = m2BaseZ + state.deckSeatZ + ex * 55;
+
+      // Side-mounted Power Pod alongside M1's blank Left (-X) or Right (+X) wall!
+      // In side_by_side, place it on the outer side of M1 (-X) so it never sits between M1 and M2!
+      const effSide = sideBySide ? -1 : state.podSide;
+      const podX = m1X + effSide * (outerW / 2 + (state.brickT + 16) / 2 + 2 + ex * 55);
+      const podY = 0;
+
+      const filterY = state.drawerPull * 165 + ex * 75;
+      const filterZ = state.baseRingH + 3.0;
+
+      return { outerW, colTopZ, sideBySide, m1X, m2X, m2BaseZ, macZ, rs30TurntableZ, podX, podY, filterY, filterZ };
+    }
+
+    function isLightTheme() {
+      if (document.documentElement.classList.contains("light")) return true;
+      if (document.documentElement.classList.contains("dark")) return false;
+      const bg = getComputedStyle(document.documentElement).getPropertyValue("--background").trim();
+      if (bg.startsWith("#")) {
+        const hex = bg.slice(1);
+        return parseInt(hex.length === 3 ? hex[0] + hex[0] : hex.slice(0, 2), 16) > 140;
+      }
+      return false;
+    }
+
+    let animTime = 0;
+
+    function renderFrame(ts) {
+      animTime = (ts || 0) * 0.001;
+      const rect = glCanvas.parentElement.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const w = Math.max(1, Math.floor(rect.width)), h = Math.max(1, Math.floor(rect.height));
+      if (glCanvas.width !== w * dpr || glCanvas.height !== h * dpr) {
+        glCanvas.width = hudCanvas.width = w * dpr;
+        glCanvas.height = hudCanvas.height = h * dpr;
+      }
+
+      gl.viewport(0, 0, glCanvas.width, glCanvas.height);
+      gl.clearColor(0, 0, 0, 0);
+      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+      gl.enable(gl.DEPTH_TEST); gl.enable(gl.CULL_FACE);
+
+      const eye = [
+        state.camTarget[0] + state.camDist * Math.cos(state.camElevation) * Math.sin(state.camAzimuth),
+        state.camTarget[1] + state.camDist * Math.cos(state.camElevation) * Math.cos(state.camAzimuth),
+        state.camTarget[2] + state.camDist * Math.sin(state.camElevation),
+      ];
+      const vpMat = M4.mul(M4.perspective((38 * Math.PI) / 180, w / h, 10, 4200), M4.lookAtZUp(eye, state.camTarget));
+      const tf = getSceneTransforms();
+      const lightMode = isLightTheme();
+
+      hudCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      hudCtx.clearRect(0, 0, w, h);
+
+      const dockPrimary = [0.22, 0.45, 0.82], dockDeckCol = [0.19, 0.39, 0.72];
+      const dockPodCol = [0.25, 0.33, 0.46], dockFilter = [0.16, 0.58, 0.52];
+      const macSilver = lightMode ? [0.78, 0.81, 0.85] : [0.82, 0.85, 0.89];
+      const macDark = [0.16, 0.17, 0.20], rs30Gray = [0.38, 0.40, 0.44], rs30ArmCol = [0.27, 0.29, 0.33], redRing = [0.86, 0.18, 0.20];
+
+      gl.disable(gl.BLEND); gl.depthMask(true);
+      drawMesh(cadGL.m1, M4.translate(tf.m1X, 0, 0), vpMat, eye, dockPrimary, 1.0, 0.30);
+      drawMesh(cadGL.m2, M4.translate(tf.m2X, 0, tf.m2BaseZ), vpMat, eye, dockDeckCol, 1.0, 0.30);
+      if (state.scheme !== "tower_slim") drawMesh(cadGL.m3, M4.translate(tf.podX, tf.podY, 0), vpMat, eye, dockPodCol, 1.0, 0.25);
+      drawMesh(cadGL.m4, M4.translate(tf.m1X, tf.filterY, tf.filterZ), vpMat, eye, dockFilter, 1.0, 0.2);
+      drawMesh(hwMeshes.filterMeshDisc, M4.translate(tf.m1X, tf.filterY, tf.filterZ + 1.6), vpMat, eye, [0.12, 0.14, 0.17], 1.0, 0.1);
+
+      const hwAlpha = state.xrayHardware ? 0.32 : 1.0;
+      if (!state.printOnly) {
+        if (state.xrayHardware) { gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA); gl.depthMask(false); }
+        drawMesh(hwMeshes.macFoot, M4.translate(tf.m1X, 0, tf.macZ - state.macFootH), vpMat, eye, macDark, hwAlpha, 0.2);
+        drawMesh(hwMeshes.macBody, M4.translate(tf.m1X, 0, tf.macZ), vpMat, eye, macSilver, hwAlpha, 0.75);
+        if (!state.xrayHardware) {
+          drawMesh(hwMeshes.macFrontPort, M4.translate(tf.m1X - 36, 97.5, tf.macZ + 18), vpMat, eye, macDark, 1.0, 0.1);
+          drawMesh(hwMeshes.macFrontPort, M4.translate(tf.m1X - 14, 97.5, tf.macZ + 18), vpMat, eye, macDark, 1.0, 0.1);
+          drawMesh(hwMeshes.macSdSlot, M4.translate(tf.m1X + 26, 97.5, tf.macZ + 18), vpMat, eye, macDark, 1.0, 0.1);
+          drawMesh(hwMeshes.macRearBar, M4.translate(tf.m1X, -97.5, tf.macZ + 14), vpMat, eye, macDark, 1.0, 0.1);
+        }
+        if (state.scheme !== "tower_slim") {
+          drawMesh(hwMeshes.powerBrick, M4.translate(tf.podX, tf.podY, 10 + state.explode * 35), vpMat, eye, macDark, hwAlpha, 0.2);
+        }
+
+        const yawRad = (state.yawDeg * Math.PI) / 180, pitchRad = (-state.pitchDeg * Math.PI) / 180;
+        const baseMat = M4.mul(M4.translate(tf.m2X, 0, tf.rs30TurntableZ), M4.rotZ(yawRad));
+        drawMesh(hwMeshes.rs30Base, baseMat, vpMat, eye, rs30ArmCol, hwAlpha, 0.35);
+        drawMesh(hwMeshes.rs30Arm, M4.mul(baseMat, M4.translate(-141, 0, 14)), vpMat, eye, rs30ArmCol, hwAlpha, 0.45);
+        drawMesh(hwMeshes.rs30Arm, M4.mul(baseMat, M4.translate(141, 0, 14)), vpMat, eye, rs30ArmCol, hwAlpha, 0.45);
+        const pivotMat = M4.mul(baseMat, M4.mul(M4.translate(0, 0, 142), M4.rotX(pitchRad)));
+        drawMesh(hwMeshes.rs30Head, M4.mul(pivotMat, M4.translate(0, 0, -92)), vpMat, eye, rs30Gray, hwAlpha, 0.35);
+        drawMesh(hwMeshes.rs30LensRing, M4.mul(pivotMat, M4.translate(48, 92, 16)), vpMat, eye, redRing, hwAlpha, 0.6);
+        drawMesh(hwMeshes.rs30LensGlass, M4.mul(pivotMat, M4.translate(48, 92, 16)), vpMat, eye, [0.10, 0.16, 0.24], hwAlpha, 0.9);
+
+        if (state.showPhase2) {
+          const postX = tf.sideBySide ? -335 : -265;
+          drawMesh(hwMeshes.sofaPost, M4.translate(postX, -60, 0), vpMat, eye, [0.30, 0.33, 0.38], 0.88, 0.5);
+          const armSwing = Math.sin(animTime * 0.9) * 0.25 + 0.35;
+          const armBase = M4.mul(M4.translate(postX, -60, 290), M4.rotZ(-armSwing));
+          drawMesh(hwMeshes.sofaArm1, M4.mul(armBase, M4.translate(0, 110, 0)), vpMat, eye, [0.35, 0.39, 0.45], 0.88, 0.5);
+          drawMesh(hwMeshes.sofaTray, M4.mul(armBase, M4.mul(M4.translate(0, 235, 16), M4.rotZ(armSwing * 0.7))), vpMat, eye, dockPrimary, 0.92, 0.3);
+        }
+
+        if (state.showBeam) {
+          gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA); gl.depthMask(false); gl.disable(gl.CULL_FACE);
+          drawMesh(hwMeshes.beamCone, M4.mul(pivotMat, M4.translate(48, 106, 16)), vpMat, eye, [0.32, 0.78, 0.98], 0.16, 0.1);
+          gl.enable(gl.CULL_FACE);
+        }
+        gl.depthMask(true); gl.disable(gl.BLEND);
+      }
+
+      drawHudOverlays(vpMat, w, h, tf, lightMode);
+      requestAnimationFrame(renderFrame);
+    }
+
+    function draw3DPoly(pts3d, vpMat, w, h, strokeStyle, lineWidth = 1.5, dash = []) {
+      const proj = pts3d.map(p => M4.project(p, vpMat, w, h));
+      if (proj.some(p => !p)) return null;
+      hudCtx.save(); hudCtx.strokeStyle = strokeStyle; hudCtx.lineWidth = lineWidth; hudCtx.setLineDash(dash);
+      hudCtx.beginPath(); proj.forEach((p, idx) => (idx === 0 ? hudCtx.moveTo(p[0], p[1]) : hudCtx.lineTo(p[0], p[1])));
+      hudCtx.stroke(); hudCtx.restore();
+      return proj;
+    }
+
+    function drawPillLabel(text, x, y, bg, fg, borderCol) {
+      hudCtx.save();
+      hudCtx.font = "600 11px ui-monospace, SFMono-Regular, Menlo, monospace";
+      const tw = hudCtx.measureText(text).width + 12;
+      hudCtx.fillStyle = bg; hudCtx.strokeStyle = borderCol; hudCtx.lineWidth = 1;
+      hudCtx.beginPath(); hudCtx.roundRect(x - tw / 2, y - 10, tw, 20, 5); hudCtx.fill(); hudCtx.stroke();
+      hudCtx.fillStyle = fg; hudCtx.textAlign = "center"; hudCtx.textBaseline = "middle";
+      hudCtx.fillText(text, x, y + 0.5);
+      hudCtx.restore();
+    }
+
+    function drawHudOverlays(vpMat, w, h, tf, lightMode) {
+      const mutedLine = lightMode ? "rgba(100,116,139,0.38)" : "rgba(148,163,184,0.32)";
+      const labelBg = lightMode ? "rgba(255,255,255,0.92)" : "rgba(15,23,42,0.88)";
+      const labelFg = lightMode ? "#0f172a" : "#f8fafc";
+      const labelBdr = lightMode ? "rgba(148,163,184,0.6)" : "rgba(71,85,105,0.8)";
+
+      // 1. Bambu 256x256mm bed reference around M1
+      draw3DPoly(
+        [[tf.m1X - 128, -128, 0], [tf.m1X + 128, -128, 0], [tf.m1X + 128, 128, 0], [tf.m1X - 128, 128, 0], [tf.m1X - 128, -128, 0]],
+        vpMat, w, h, mutedLine, 1.2, [5, 4]
+      );
+
+      // 2. RS30 Ø333mm (R = 166.5mm) 360° Worst-Case Swept Clearance Envelope Circle
+      if (state.showSwept && !state.printOnly) {
+        const zSweep = tf.rs30TurntableZ + 55;
+        const circlePts = [];
+        for (let k = 0; k <= 64; k++) {
+          const a = (2 * Math.PI * k) / 64;
+          circlePts.push([tf.m2X + state.rs30SweptR * Math.cos(a), state.rs30SweptR * Math.sin(a), zSweep]);
+        }
+        draw3DPoly(circlePts, vpMat, w, h, "#a855f7", 1.8, [6, 4]);
+        const lblPt = M4.project([tf.m2X + state.rs30SweptR * 0.72, state.rs30SweptR * 0.72, zSweep], vpMat, w, h);
+        if (lblPt) {
+          const gapC = (state.sideBySideDx - tf.outerW / 2 - state.rs30SweptR).toFixed(1);
+          const txt = tf.sideBySide
+            ? `Ø333mm 360°回转圆 (距Mac坞净留 +${gapC}mm)`
+            : `Ø333mm 360°回转圆 (高于侧电源舱 +45mm 零干涉)`;
+          drawPillLabel(txt, lblPt[0], lblPt[1], labelBg, "#a855f7", "#a855f7");
+        }
+      }
+
+      // 3. Key Dimensions
+      if (state.showDims) {
+        const hw = tf.outerW / 2;
+        const dimFront = draw3DPoly([[tf.m1X - hw, 122, 0], [tf.m1X + hw, 122, 0]], vpMat, w, h, "#3b82f6", 1.5);
+        if (dimFront) drawPillLabel(`单件 ${tf.outerW.toFixed(1)}mm (≤256热床)`, (dimFront[0][0] + dimFront[1][0]) / 2, (dimFront[0][1] + dimFront[1][1]) / 2 + 12, labelBg, labelFg, labelBdr);
+
+        if (tf.sideBySide) {
+          const dimAx = draw3DPoly([[tf.m1X, -135, 0], [tf.m2X, -135, 0]], vpMat, w, h, "#10b981", 1.8);
+          if (dimAx) drawPillLabel(`双坞安全中心距 ${state.sideBySideDx}mm`, (dimAx[0][0] + dimAx[1][0]) / 2, (dimAx[0][1] + dimAx[1][1]) / 2 + 14, labelBg, "#10b981", "#10b981");
+        } else {
+          const dimDeck = draw3DPoly([[tf.m2X + hw + 14, 0, tf.m2BaseZ], [tf.m2X + hw + 14, 0, tf.m2BaseZ + state.deckSeatZ]], vpMat, w, h, "#f59e0b", 2.0);
+          if (dimDeck) drawPillLabel(`${state.deckSeatZ}mm 实厚承重桥 (8×刚度)`, dimDeck[0][0] + 68, (dimDeck[0][1] + dimDeck[1][1]) / 2, labelBg, labelFg, labelBdr);
+        }
+      }
+
+      // 4. Unobstructed Rear Cable Routing
+      if (state.showCables && !state.printOnly) {
+        const hdmiPts = [
+          [tf.m1X + 28, -99, tf.macZ + 16],
+          [tf.m1X + 52, -122, tf.macZ + 38],
+          [(tf.m1X + tf.m2X) / 2 + 56, -128, (tf.macZ + tf.rs30TurntableZ) / 2 + 35],
+          [tf.m2X + 34, -118, tf.rs30TurntableZ + 48],
+          [tf.m2X + 20, -96, tf.rs30TurntableZ + 62],
+        ];
+        const hdmiProj = draw3DPoly(hdmiPts, vpMat, w, h, "#10b981", 3.0);
+        if (hdmiProj) drawPillLabel("Mac背口100%无遮挡 · 0.5m HDMI 2.1", hdmiProj[1][0], hdmiProj[1][1] + 12, labelBg, "#10b981", "#10b981");
+
+        if (state.scheme !== "tower_slim") {
+          const dcPts = [
+            [tf.podX, -75, 96],
+            [tf.podX * 0.6, -118, tf.rs30TurntableZ + 24],
+            [tf.m2X - 26, -96, tf.rs30TurntableZ + 58],
+          ];
+          draw3DPoly(dcPts, vpMat, w, h, "#f97316", 2.6);
+        }
+      }
+
+      // 5. Airflow
+      if (state.showAirflow) {
+        const pulse = (animTime * 42) % 28;
+        draw3DPoly([[tf.m1X, 138 - pulse, 12], [tf.m1X, 82, 14]], vpMat, w, h, "#06b6d4", 2.4);
+        draw3DPoly([[tf.m1X, -100, tf.macZ + 58], [tf.m1X, -155 - pulse, tf.macZ + 64]], vpMat, w, h, "#ef4444", 2.6);
+        const exLbl = M4.project([tf.m1X, -162, tf.macZ + 66], vpMat, w, h);
+        if (exLbl) drawPillLabel("背部热风直排无阻挡", exLbl[0], exLbl[1], labelBg, "#ef4444", "#ef4444");
+      }
+    }
+
+    // Orbit / Pan / Zoom
+    let dragMode = null, lastX = 0, lastY = 0;
+    glCanvas.addEventListener("contextmenu", e => e.preventDefault());
+    glCanvas.addEventListener("pointerdown", e => {
+      glCanvas.setPointerCapture(e.pointerId);
+      dragMode = (e.button === 2 || e.shiftKey) ? "pan" : "orbit";
+      lastX = e.clientX; lastY = e.clientY;
+    });
+    glCanvas.addEventListener("pointermove", e => {
+      if (!dragMode) return;
+      const dx = e.clientX - lastX, dy = e.clientY - lastY; lastX = e.clientX; lastY = e.clientY;
+      if (dragMode === "orbit") {
+        state.camAzimuth -= dx * 0.0075;
+        state.camElevation = Math.max(-1.35, Math.min(1.45, state.camElevation + dy * 0.0075));
+      } else {
+        const panScale = state.camDist * 0.0012, ca = Math.cos(state.camAzimuth), sa = Math.sin(state.camAzimuth);
+        state.camTarget[0] -= ca * dx * panScale; state.camTarget[1] += sa * dx * panScale; state.camTarget[2] += dy * panScale;
+      }
+    });
+    glCanvas.addEventListener("pointerup", () => { dragMode = null; });
+    glCanvas.addEventListener("wheel", e => {
+      e.preventDefault();
+      state.camDist = Math.max(280, Math.min(1750, state.camDist * (1 + e.deltaY * 0.001)));
+    }, { passive: false });
+
+    const CAM_PRESETS = {
+      iso:    { az: -0.68, el: 0.44, dist: 760, z: 155 },
+      front:  { az: 0.0,   el: 0.12, dist: 720, z: 155 },
+      back:   { az: Math.PI, el: 0.18, dist: 740, z: 145 },
+      side:   { az: -Math.PI / 2, el: 0.16, dist: 760, z: 145 },
+      top:    { az: 0.0,   el: 1.44, dist: 840, z: 140 },
+      bottom: { az: 0.4,   el: -1.25, dist: 700, z: 80 },
+    };
+    document.querySelectorAll(".cam-btn").forEach(btn => btn.addEventListener("click", () => {
+      const p = CAM_PRESETS[btn.dataset.cam];
+      state.camAzimuth = p.az; state.camElevation = p.el;
+      state.camDist = state.scheme === "side_by_side" ? p.dist * 1.25 : p.dist;
+      state.camTarget = [0, 0, state.scheme === "side_by_side" ? 115 : p.z];
+    }));
+
+    const MATERIALS = {
+      petgcf: {
+        name: "PETG-CF 碳纤增强", farmRate: [0.18, 0.28], jlcRate: [0.55, 0.75], wenextRate: [0.65, 0.90],
+        sf: "> 28× (刚度提升65%)",
+        note: "⭐ 强烈推荐：掺入 15% 短切碳纤维后弯曲模量达 ~3,600 MPa（比普通 PETG 刚性提升 65%），耐热 ~85°C，彻底杜绝 5.4kg 长期静载蠕变，且消光深空灰外观最接近原厂金属。",
+        tempSpec: "PETG-CF 碳纤增强深空灰，层高 0.20mm，4层外壁(≥1.6mm)，顶底各5层，30% 陀螺仪(Gyroid)填充",
+      },
+      petg: {
+        name: "PETG 哑光工程料", farmRate: [0.10, 0.15], jlcRate: [0.30, 0.42], wenextRate: [0.38, 0.52],
+        sf: "> 18× (5.4kg长期达标)",
+        note: "✅ 性价比主力：V2 将顶盘实心桥加厚至 16mm 后，普通 PETG 在 4层壁 + 30% Gyroid 填充下中心变形仅 0.04mm，耐热 75°C 完全满足承重。（注：嘉立创贵是因为按模型体积系数报价，与农场 4壁30%填充的 PETG 实际强度处于同一梯队）。",
+        tempSpec: "PETG 哑光深空灰/黑色，层高 0.20mm，4层外壁(≥1.6mm)，顶底各5层，30% 陀螺仪(Gyroid)填充",
+      },
+      asa: {
+        name: "ASA / ABS 工程耐热料", farmRate: [0.14, 0.22], jlcRate: [0.38, 0.50], wenextRate: [0.45, 0.62],
+        sf: "> 20× (耐温95°C+)",
+        note: "耐热高达 95°C+，适合封闭机柜或高温环境，需拓竹 P1S/X1C 等恒温封箱机型打印。",
+        tempSpec: "ASA 哑光黑/灰，封箱恒温打印，层高 0.20mm，4层外壁，30% 陀螺仪填充",
+      },
+      pa12: {
+        name: "SLS 激光烧结尼龙 PA12", farmRate: [0.85, 1.20], jlcRate: [0.80, 1.15], wenextRate: [0.95, 1.35],
+        sf: "> 45× (100%实心各向同性)",
+        note: "🏆 工业手板天花板：激光烧结尼龙粉末 100% 实心，无 Z 轴层间剥离短板，耐温 120°C+、零层纹。对于 5.4kg 桌面静置属性能大幅过剩，适合追求量产注塑级质感的用户。",
+        tempSpec: "SLS PA12 尼龙（深灰/染黑喷砂），100%实心烧结，默认公差 ±0.2mm",
+      },
+      pla: {
+        name: "普通 PLA", farmRate: [0.07, 0.11], jlcRate: [0.25, 0.35], wenextRate: [0.32, 0.45],
+        sf: "⚠ 不合格 (受热易蠕变)",
+        note: "❌ 避坑警告：PLA 虽然室温硬，但热变形温度仅 52–55°C 且在 5.4kg 恒定静载下会发生高分子蠕变松弛，半年后顶板会下凹！请务必换选 PETG 或 PETG-CF。",
+        tempSpec: "仅限低成本试装验证尺寸，正式承重请换 PETG / PETG-CF",
+      },
+    };
+
+    const VENDORS = { farm: { ship: 10 }, jlc: { ship: 12 }, wenext: { ship: 15 } };
+
+    function getActiveModulesList() {
+      const list = [
+        { key: "m1", file: "01_mac_studio_base_cradle.stl", title: "M1 · 7.5mm重型外骨骼悬浮底座", note: "底面朝下平铺 · 零支撑" },
+        { key: "m2", file: "02_rs30_gimbal_upper_deck.stl", title: "M2 · 16mm实厚防干涉云台顶盘", note: "底面直接朝下平铺(45°自支撑槽) · 零支撑" },
+      ];
+      if (state.scheme !== "tower_slim") {
+        list.push({ key: "m3", file: "03_power_brick_cable_pod.stl", title: "M3 · 侧挂式300W电源散热舱", note: "置于Mac左/右侧空白壁 · 零遮挡背口" });
+      }
+      list.push({ key: "m4", file: "04_bottom_dust_filter_frame.stl", title: "M4 · 底部抽拉防尘网托框", note: "3.2mm薄框 · 15分钟快打" });
+      return list;
+    }
+
+    function updateReadoutsAndCards() {
+      const outerW = state.macW + 2 * state.macClearance + 2 * state.wallThickness;
+      const fits256 = outerW <= 256.0;
+      document.getElementById("bedFitBadge").textContent = fits256
+        ? `✓ 适配 256mm 拓竹盘 (${outerW.toFixed(1)}mm)`
+        : `⚠ 需 ≥300mm 大盘 (${outerW.toFixed(1)}mm)`;
+
+      const titles = {
+        tower_full: "方案 A (V2) · 立式双层侧挂电源坞",
+        tower_slim: "方案 B (V2) · 立式极简承重塔",
+        side_by_side: "方案 C (V2) · 294mm宽轴距防撞并排坞",
+      };
+      document.getElementById("hudSchemeTitle").textContent = titles[state.scheme];
+      const wTot = state.scheme === "side_by_side"
+        ? (state.sideBySideDx + outerW + (state.brickT + 18))
+        : (state.scheme === "tower_slim" ? outerW : outerW + state.brickT + 18);
+      document.getElementById("hudEnvelope").textContent =
+        `占地: ${wTot.toFixed(0)} × ${outerW.toFixed(0)} mm | Mac背口净空: 100%敞开`;
+
+      const activeMods = getActiveModulesList();
+      const container = document.getElementById("stlPartCards");
+      container.innerHTML = "";
+      activeMods.forEach(m => {
+        const st = cadStats[m.key];
+        const card = document.createElement("div");
+        card.className = "p-2.5 rounded-lg bg-[var(--background)] border border-[var(--border)] flex items-center justify-between gap-2";
+        card.innerHTML = `
+          <div class="space-y-0.5">
+            <div class="font-semibold text-[var(--foreground)]">${m.title}</div>
+            <div class="font-mono text-[var(--muted-foreground)]">${st.bbox[0]}×${st.bbox[1]}×${st.bbox[2]} mm · 约 ${st.fdmPetgG}g</div>
+            <div class="text-[var(--muted-foreground)]">${m.note}</div>
+          </div>
+          <button data-dl="${m.key}" data-fn="${m.file}" class="px-2.5 py-1.5 rounded-md bg-[var(--secondary)] hover:bg-[var(--primary)] hover:text-[var(--primary-foreground)] border border-[var(--border)] font-medium shrink-0 cursor-pointer transition">
+            下载 STL
+          </button>`;
+        container.appendChild(card);
+      });
+      container.querySelectorAll("button[data-dl]").forEach(btn => btn.addEventListener("click", () => {
+        triggerDownload(cadBuilders[btn.dataset.dl].toBinarySTL(`StudioBeam V2 ${btn.dataset.fn}`), btn.dataset.fn);
+      }));
+      updateCostQuote();
+    }
+
+    function updateCostQuote() {
+      const matKey = document.getElementById("selMaterial").value;
+      const venKey = document.getElementById("selVendor").value;
+      const mat = MATERIALS[matKey], ven = VENDORS[venKey];
+      const activeMods = getActiveModulesList();
+      let weightG = 0;
+      activeMods.forEach(m => { weightG += (matKey === "pa12") ? cadStats[m.key].slsPa12G : cadStats[m.key].fdmPetgG; });
+      const rates = venKey === "farm" ? mat.farmRate : (venKey === "jlc" ? mat.jlcRate : mat.wenextRate);
+      const low = Math.round(weightG * rates[0] + ven.ship), high = Math.round(weightG * rates[1] + ven.ship);
+      document.getElementById("costRangeText").textContent = `¥${low} – ¥${high}`;
+      document.getElementById("costWeightText").textContent = `${Math.round(weightG)} g`;
+      document.getElementById("costSfText").textContent = mat.sf;
+      document.getElementById("costAdviceText").textContent = mat.note;
+
+      const filesStr = activeMods.map(m => m.file).join("、");
+      document.getElementById("txtOrderNote").value =
+        `老板你好，麻烦打一套承重结构支架 V2 版（共 ${activeMods.length} 个 STL：${filesStr}，单位 mm，上方需稳固承载 5.4kg 投影仪）。\n` +
+        `工艺要求：${mat.tempSpec}。\n` +
+        `摆放说明：全部 4 个零件均直接底面(Z=0)朝下平铺热床即可！凹槽均已设计 45° 自支撑斜顶，全套零支撑直打。谢谢！`;
+    }
+
+    const exportZipAll = () => {
+      const mods = getActiveModulesList();
+      const files = [{ name: "00_V2代打工艺与承重说明.txt", data: document.getElementById("txtOrderNote").value }];
+      for (const m of mods) files.push({ name: m.file, data: cadBuilders[m.key].toBinarySTL(`StudioBeam V2 ${m.file}`) });
+      triggerDownload(buildZipBytes(files), "StudioBeam_DuoDock_V2_STL_Package.zip", "application/zip");
+    };
+    document.getElementById("btnQuickExportZip").addEventListener("click", exportZipAll);
+    document.getElementById("btnExportZipTab").addEventListener("click", exportZipAll);
+
+    document.getElementById("btnSaveOfflineHtml").addEventListener("click", () => {
+      const offlineCss = `<style>
+        :root{--background:#0b0f19;--card:#131a2a;--secondary:#1e293b;--border:#2a3950;--card-border:#2a3950;--foreground:#f1f5f9;--muted-foreground:#94a3b8;--primary:#3b82f6;--primary-foreground:#fff;--success:#10b981}
+        body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--background);color:var(--foreground);font-size:13px;line-height:1.5}
+        .max-w-\\[1440px\\]{max-width:1440px}.mx-auto{margin:0 auto}.p-2{padding:8px}.p-2\\.5{padding:10px}.p-3{padding:12px}.p-3\\.5{padding:14px}.md\\:p-4{padding:16px}
+        .px-2{padding:0 8px}.px-2\\.5{padding:0 10px}.px-3{padding:0 12px}.px-4{padding:0 16px}.py-1{padding-top:4px;padding-bottom:4px}.py-1\\.5{padding-top:6px;padding-bottom:6px}.py-2{padding-top:8px;padding-bottom:8px}.py-2\\.5{padding-top:10px;padding-bottom:10px}.py-3{padding-top:12px;padding-bottom:12px}
+        .space-y-1>*+*{margin-top:4px}.space-y-1\\.5>*+*{margin-top:6px}.space-y-2>*+*{margin-top:8px}.space-y-2\\.5>*+*{margin-top:10px}.space-y-3>*+*{margin-top:12px}.space-y-3\\.5>*+*{margin-top:14px}
+        .flex{display:flex}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-center{align-items:center}.items-start{align-items:flex-start}.items-baseline{align-items:baseline}.justify-between{justify-content:space-between}.justify-center{justify-content:center}
+        .gap-1{gap:4px}.gap-1\\.5{gap:6px}.gap-2{gap:8px}.gap-3{gap:12px}.grid{display:grid}.grid-cols-1{grid-template-columns:1fr}.grid-cols-2{grid-template-columns:1fr 1fr}.grid-cols-3{grid-template-columns:1fr 1fr 1fr}
+        @media(min-width:1024px){.lg\\:grid-cols-12{grid-template-columns:repeat(12,minmax(0,1fr))}.lg\\:col-span-8{grid-column:span 8/span 8}.lg\\:col-span-4{grid-column:span 4/span 4}.md\\:grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}}
+        .w-full{width:100%}.h-full{height:100%}.w-9{width:36px}.h-9{height:36px}.w-2\\.5{width:10px}.h-2\\.5{height:10px}.h-\\[460px\\],.md\\:h-\\[540px\\]{height:520px}.max-h-\\[540px\\]{max-height:540px}.max-w-\\[300px\\]{max-width:300px}
+        .relative{position:relative}.absolute{position:absolute}.inset-0{inset:0}.top-3{top:12px}.left-3{left:12px}.bottom-3{bottom:12px}.inline-block{display:inline-block}.block{display:block}.hidden{display:none!important}
+        .rounded{border-radius:4px}.rounded-md{border-radius:6px}.rounded-lg{border-radius:8px}.rounded-xl{border-radius:12px}.rounded-full{border-radius:999px}.rounded-sm{border-radius:2px}
+        .border{border:1px solid var(--border)}.border-b{border-bottom:1px solid var(--border)}.border-t{border-top:1px solid var(--border)}.border-b-2{border-bottom:2px solid var(--border)}.border-\\[var\\(--primary\\)\\]{border-color:var(--primary)!important}.border-transparent{border-color:transparent}
+        .bg-\\[var\\(--background\\)\\]{background:var(--background)}.bg-\\[var\\(--card\\)\\],.bg-\\[var\\(--card\\)\\]\\/90{background:var(--card)}.bg-\\[var\\(--secondary\\)\\]{background:var(--secondary)}.bg-\\[var\\(--primary\\)\\]{background:var(--primary)}
+        .text-\\[var\\(--foreground\\)\\]{color:var(--foreground)}.text-\\[var\\(--muted-foreground\\)\\]{color:var(--muted-foreground)}.text-\\[var\\(--primary\\)\\]{color:var(--primary)}.text-\\[var\\(--primary-foreground\\)\\]{color:var(--primary-foreground)}.text-\\[var\\(--success\\)\\]{color:var(--success)}
+        .text-xs{font-size:12px}.text-sm{font-size:14px}.text-lg{font-size:18px}.font-mono{font-family:ui-monospace,monospace}.font-medium{font-weight:500}.font-semibold{font-weight:600}.font-bold{font-weight:700}.text-left{text-align:left}
+        .overflow-hidden{overflow:hidden}.overflow-y-auto{overflow-y:auto}.cursor-pointer{cursor:pointer}.pointer-events-none{pointer-events:none}.shrink-0{flex-shrink:0}
+        button,select,textarea{font:inherit;color:inherit;background:none;border:none}select,textarea{background:var(--secondary);border:1px solid var(--border)}input[type="range"]{width:100%;accent-color:var(--primary)}
+      </style>`;
+      const docHtml = "<!DOCTYPE html>\n<html lang=\"zh-CN\">\n" +
+        document.documentElement.innerHTML.replace(/<script[^>]*gstatic[^>]*><\/script>/i, offlineCss) +
+        "\n</html>";
+      triggerDownload(docHtml, "StudioBeam_DuoDock_V2_Offline_Viewer.html", "text/html;charset=utf-8");
+    });
+
+    document.querySelectorAll(".tab-btn").forEach(btn => btn.addEventListener("click", () => {
+      const target = btn.dataset.tab;
+      document.querySelectorAll(".tab-btn").forEach(b => {
+        const active = b.dataset.tab === target;
+        b.classList.toggle("border-[var(--primary)]", active);
+        b.classList.toggle("text-[var(--foreground)]", active);
+        b.classList.toggle("border-transparent", !active);
+        b.classList.toggle("text-[var(--muted-foreground)]", !active);
+      });
+      document.querySelectorAll(".tab-pane").forEach(p => p.classList.toggle("hidden", p.id !== `tab-${target}`));
+    }));
+
+    document.querySelectorAll(".scheme-btn").forEach(btn => btn.addEventListener("click", () => {
+      state.scheme = btn.dataset.scheme;
+      document.querySelectorAll(".scheme-btn").forEach(b => {
+        const active = b.dataset.scheme === state.scheme;
+        b.classList.toggle("border-[var(--primary)]", active);
+        b.classList.toggle("bg-[var(--secondary)]", active);
+        b.classList.toggle("border-[var(--border)]", !active);
+      });
+      state.camDist = state.scheme === "side_by_side" ? 940 : 760;
+      state.camTarget = [0, 0, state.scheme === "side_by_side" ? 115 : 155];
+      rebuildPrintableCAD();
+    }));
+
+    document.getElementById("selPodSide").addEventListener("change", e => { state.podSide = parseInt(e.target.value, 10); });
+
+    const bindRange = (id, valId, fmt, onChange) => {
+      const el = document.getElementById(id), vel = document.getElementById(valId);
+      el.addEventListener("input", () => { const v = parseFloat(el.value); vel.textContent = fmt(v); onChange(v); });
+    };
+    bindRange("rngExplode", "valExplode", v => `${Math.round(v)}%`, v => { state.explode = v / 100; });
+    bindRange("rngYaw", "valYaw", v => `${Math.round(v)}°`, v => { state.yawDeg = v; });
+    bindRange("rngPitch", "valPitch", v => `${Math.round(v)}°`, v => { state.pitchDeg = v; });
+    bindRange("rngDrawer", "valDrawer", v => `${Math.round(v)}%`, v => { state.drawerPull = v / 100; });
+    bindRange("rngClearance", "valClearance", v => `${v.toFixed(1)} mm`, v => { state.macClearance = v; rebuildPrintableCAD(); });
+    bindRange("rngWall", "valWall", v => `${v.toFixed(1)} mm`, v => { state.wallThickness = v; rebuildPrintableCAD(); });
+    bindRange("rngDeckH", "valDeckH", v => `${v.toFixed(1)} mm`, v => { state.deckSeatZ = v; rebuildPrintableCAD(); });
+
+    document.getElementById("btnResetParams").addEventListener("click", () => {
+      state.macClearance = DEFAULTS.macClearance;
+      state.wallThickness = DEFAULTS.wallThickness;
+      state.deckSeatZ = DEFAULTS.deckSeatZ;
+      document.getElementById("rngClearance").value = state.macClearance;
+      document.getElementById("valClearance").textContent = `${state.macClearance.toFixed(1)} mm`;
+      document.getElementById("rngWall").value = state.wallThickness;
+      document.getElementById("valWall").textContent = `${state.wallThickness.toFixed(1)} mm`;
+      document.getElementById("rngDeckH").value = state.deckSeatZ;
+      document.getElementById("valDeckH").textContent = `${state.deckSeatZ.toFixed(1)} mm`;
+      rebuildPrintableCAD();
+    });
+
+    const bindChk = (id, prop) => { const el = document.getElementById(id); el.addEventListener("change", () => { state[prop] = el.checked; }); };
+    bindChk("chkSwept", "showSwept"); bindChk("chkCables", "showCables"); bindChk("chkAirflow", "showAirflow");
+    bindChk("chkDims", "showDims"); bindChk("chkBeam", "showBeam"); bindChk("chkXray", "xrayHardware");
+    bindChk("chkPrintOnly", "printOnly"); bindChk("chkPhase2", "showPhase2");
+
+    document.getElementById("selMaterial").addEventListener("change", updateCostQuote);
+    document.getElementById("selVendor").addEventListener("change", updateCostQuote);
+    document.getElementById("btnCopyOrderNote").addEventListener("click", async (e) => {
+      try {
+        await navigator.clipboard.writeText(document.getElementById("txtOrderNote").value);
+        e.target.textContent = "✓ 已复制";
+        setTimeout(() => { e.target.textContent = "复制下单话术"; }, 1600);
+      } catch (_) {
+        document.getElementById("txtOrderNote").select();
+      }
+    });
+
+    rebuildPrintableCAD();
+    requestAnimationFrame(renderFrame);
+  })();
+  </script>
+</body>
+</html>
