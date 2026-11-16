@@ -48,12 +48,13 @@ class DockParams:
     rs30_base_d: float = 196.0
     rs30_bolt_hole_d: float = 7.0
 
-    # Power brick bay (RS30 280W-300W adapter, mounted alongside Left/Right blank wall)
-    brick_w: float = 188.0
-    brick_t: float = 50.0             # Widened to 50mm inner slot to fit all 240W-330W bricks loosely
-    brick_h: float = 92.0
+    # Power brick bay (XGIMI RS30 180W-330W external DC adapter; M5 Mac Studio PSU is internal!)
+    # Flagship 300W-330W brick measures up to 200 x 90 x 40 mm (~1.05-1.2 kg) with AC/DC cords at both ends
+    brick_w: float = 208.0            # 208mm inner length (> 200mm brick; 220mm outer <= 256mm Bambu bed!)
+    brick_t: float = 48.0             # 48mm inner width (fits 40-44mm brick + convection air gap; 60mm outer)
+    brick_h: float = 94.0             # 94mm inner wall height above 8mm base (102mm total height wraps 90mm brick)
 
-    # V3.1 Full Self-Audit Clearances & Dual-Tier Rails (mm)
+    # V3.2 Full Self-Audit Clearances, Dual-Tier Rails & 4x M4 Positive Anti-Lift Pillar Locks (mm)
     mac_side_clearance: float = 1.8   # 197.0 + 2*1.8 = 200.6 mm portal (leaves 1.6mm net play WITH 2x1.0mm velvet strips!)
     base_intake_half: float = 87.0    # 174.0 mm Z=0..6mm 360° bed frame -> forms physical Z=6mm shelf under 181mm dust filter!
     rail_inner_half: float = 91.5     # 183.0 mm Z=6..26mm channel (> 181mm filter & > Ø179.2mm Mac circular foot!)
@@ -62,10 +63,13 @@ class DockParams:
     shelf_z: float = 26.0             # Upper slide-rail Z height for Mac Studio (foot sits at Z=18mm, 8.8mm above filter!)
     air_gap_above_mac: float = 18.0   # 18 mm cool air plenum above Mac Studio
     tenon_h: float = 8.5              # 8.5 mm deep alignment tenons
-    tenon_inset: float = 1.9
+    tenon_inset: float = 1.35         # Leaves >= 5.3mm tenon width around 4x M4 corner locking screw bores
     tenon_tol: float = 0.25
+    m4_lock_bore_r: float = 1.9       # ~3.8mm M4 self-threading / heat-set pilot bore in M1 pillars (24mm deep)
+    m4_clear_r: float = 2.2           # ~4.4mm M4 clearance hole through M2 corner mortise roof
+    m4_cb_r: float = 4.1              # ~8.2mm recessed M4 screw head counterbore in M2 outer Z=14mm terrace
 
-    # V3.1 Raised Pedestal Upper Deck + Recessed Flat Counterbore (mm)
+    # V3.2 Raised Pedestal Upper Deck + Recessed Flat Counterbore (mm)
     deck_seat_z: float = 17.0         # 17.0 mm solid center bridge pedestal boss
     deck_outer_z: float = 14.0        # Stepped DOWN 3.0 mm outside Ø176mm so rotating U-arms have +3~4mm air gap!
     rs30_pedestal_d: float = 176.0    # Raised flat pedestal boss (< Ø196mm base -> zero cup-lip rub or diameter mismatch!)
@@ -246,23 +250,58 @@ def v3_radii(theta: float, p: DockParams) -> tuple[float, float, float, float]:
     return r_base, r_rail, r_pock, r_out
 
 
+def v3_sector_type(k: int, n_angles: int = 360) -> int:
+    """
+    Returns sector type for each 1° polar slice:
+      0 = open window (front portal, side windows, rear I/O window)
+      1 = solid structural pillar + alignment tenon/mortise
+      2 = enclosed center M4 anti-lift locking bolt bore inside each of the 4 pillars:
+          - Front-Right center: [31°, 33°)   (R ~ 122.3 mm, outside Ø196mm RS30 base!)
+          - Front-Left  center: [147°, 149°) (R ~ 122.3 mm, outside Ø196mm RS30 base!)
+          - Rear-Left   center: [214°, 216°) (R ~ 126.4 mm, outside Ø196mm RS30 base!)
+          - Rear-Right  center: [324°, 326°) (R ~ 126.4 mm, outside Ø196mm RS30 base!)
+    """
+    deg = (k * 360.0) / n_angles
+    if (
+        (31.0 <= deg < 33.0)
+        or (147.0 <= deg < 149.0)
+        or (214.0 <= deg < 216.0)
+        or (324.0 <= deg < 326.0)
+    ):
+        return 2
+    if is_v3_pillar_slice(k, n_angles):
+        return 1
+    return 0
+
+
 def build_module1_base_cradle(p: DockParams) -> MeshBuilder:
     """
-    Module 1 (V3.1): Dual-Tier Front-Slide Cassette Cradle
+    Module 1 (V3.2): Dual-Tier Front-Slide Cassette Cradle + 4x M4 Anti-Lift Pillar Lock Bores
       - Tier 1 (Z = 6.0 mm): Physical slide ledge (174mm hole, 183mm channel) supporting M4 dust filter front pull-out!
       - Tier 2 (Z = 26.0 mm): Velvet-ready horizontal slide rails (200.6mm front portal) for Mac Studio!
+      - 4x Blind M4 pilot/insert bores (Z = 115.5..139.5 mm) centered in the 4 corner tenons to bolt M2 solidly to M1!
     """
     mb = MeshBuilder()
     z_ring = p.base_ring_h                                         # 6.0 mm
     z_shelf = p.shelf_z                                            # 26.0 mm
     z_col_top = p.shelf_z + p.mac_body_h + p.air_gap_above_mac     # 131.0 mm
     z_tenon_top = z_col_top + p.tenon_h                            # 139.5 mm
+    z_bore_bot = z_tenon_top - 24.0                                # 115.5 mm (24mm deep blind M4 bore!)
 
     thetas = [2.0 * math.pi * k / p.n_angles for k in range(p.n_angles)]
-    sector_types = [1 if is_v3_pillar_slice(k, p.n_angles) else 0 for k in range(p.n_angles)]
+    sector_types = [v3_sector_type(k, p.n_angles) for k in range(p.n_angles)]
+
+    def bore_radii(theta: float) -> tuple[float, float, float, float, float, float, float, float]:
+        r_base, r_rail, r_pock, r_out = v3_radii(theta, p)
+        r_t_in = r_pock + p.tenon_inset
+        r_t_out = r_out - p.tenon_inset
+        r_mid = 0.5 * (r_t_in + r_t_out)
+        r_b_in = r_mid - p.m4_lock_bore_r
+        r_b_out = r_mid + p.m4_lock_bore_r
+        return r_base, r_rail, r_pock, r_out, r_t_in, r_t_out, r_b_in, r_b_out
 
     def profile_fn(theta: float, st: int) -> list[tuple[float, float]]:
-        r_base, r_rail, r_pock, r_out = v3_radii(theta, p)
+        r_base, r_rail, r_pock, r_out, r_t_in, r_t_out, r_b_in, r_b_out = bore_radii(theta)
         if st == 0:
             return [
                 (r_base, 0.0),
@@ -271,8 +310,11 @@ def build_module1_base_cradle(p: DockParams) -> MeshBuilder:
                 (r_rail, z_ring),
                 (r_base, z_ring),
             ]
-        r_t_in = r_pock + p.tenon_inset
-        r_t_out = r_out - p.tenon_inset
+        top_tenon_chain = (
+            [(r_b_out, z_tenon_top), (r_b_in, z_tenon_top)]
+            if st == 1
+            else [(r_b_out, z_tenon_top), (r_b_out, z_bore_bot), (r_b_in, z_bore_bot), (r_b_in, z_tenon_top)]
+        )
         return [
             (r_base, 0.0),
             (r_out, 0.0),
@@ -281,6 +323,7 @@ def build_module1_base_cradle(p: DockParams) -> MeshBuilder:
             (r_out, z_col_top),
             (r_t_out, z_col_top),
             (r_t_out, z_tenon_top),
+            *top_tenon_chain,
             (r_t_in, z_tenon_top),
             (r_t_in, z_col_top),
             (r_pock, z_col_top),
@@ -291,24 +334,28 @@ def build_module1_base_cradle(p: DockParams) -> MeshBuilder:
         ]
 
     def cheek_triangulator(builder: MeshBuilder, theta: float, st_prev: int, st_curr: int) -> None:
-        _, r_rail, r_pock, r_out = v3_radii(theta, p)
-        r_t_in = r_pock + p.tenon_inset
-        r_t_out = r_out - p.tenon_inset
+        _, r_rail, r_pock, r_out, r_t_in, r_t_out, r_b_in, r_b_out = bore_radii(theta)
         ct, st_sin = math.cos(theta), math.sin(theta)
 
         def v(r: float, z: float) -> int:
             return builder.add_vert(r * ct, r * st_sin, z)
 
+        if {st_prev, st_curr} == {1, 2}:
+            flip_bore = (st_prev == 1 and st_curr == 2)
+            q00, q10, q11, q01 = v(r_b_in, z_bore_bot), v(r_b_out, z_bore_bot), v(r_b_out, z_tenon_top), v(r_b_in, z_tenon_top)
+            builder.add_quad(q00, q10, q11, q01) if not flip_bore else builder.add_quad(q00, q01, q11, q10)
+            return
+
         flip = (st_prev == 1 and st_curr == 0)
         a0, a1 = v(r_rail, z_ring), v(r_out, z_ring)
         b0, b1, b2 = v(r_rail, z_shelf), v(r_pock, z_shelf), v(r_out, z_shelf)
         c0, c1, c2, c3 = v(r_pock, z_col_top), v(r_t_in, z_col_top), v(r_t_out, z_col_top), v(r_out, z_col_top)
-        d0, d1 = v(r_t_in, z_tenon_top), v(r_t_out, z_tenon_top)
+        d0, db_in, db_out, d1 = v(r_t_in, z_tenon_top), v(r_b_in, z_tenon_top), v(r_b_out, z_tenon_top), v(r_t_out, z_tenon_top)
 
         tris_ccw = [
             (a0, a1, b2), (a0, b2, b1), (a0, b1, b0),
             (b1, b2, c3), (b1, c3, c2), (b1, c2, c1), (b1, c1, c0),
-            (c1, c2, d1), (c1, d1, d0),
+            (c1, c2, d1), (c1, d1, db_out), (c1, db_out, db_in), (c1, db_in, d0),
         ]
         for t in tris_ccw:
             builder.add_tri(t[0], t[1], t[2]) if not flip else builder.add_tri(t[0], t[2], t[1])
@@ -319,10 +366,10 @@ def build_module1_base_cradle(p: DockParams) -> MeshBuilder:
 
 def build_module2_upper_deck(p: DockParams) -> MeshBuilder:
     """
-    Module 2 (V3.1): Raised Ø176mm Pedestal Bridge Deck + Recessed Flat Ø26mm Thumbscrew Seat
-      - Eliminates outer cup lip so RS30 U-arms rotate 360° with +3mm stepped air gap and zero diameter mismatch.
-      - Flat Ø26mm counterbore at Z=8.5mm seats standard 1/4"-20 x 14mm camera D-ring screws without wedging,
-        and hides the folded D-ring completely inside Z=0..8.5mm so Scheme C sits dead-flat on the desk!
+    Module 2 (V3.2): Raised Ø176mm Pedestal Deck + Recessed D-Ring Counterbore + 4x M4 Corner Lock Holes
+      - Center 1/4"-20 bolt hole + flat Ø26mm recessed washer seat clamps RS30's turntable base rigidly onto M2.
+      - 4x Recessed M4 countersunk/cap-screw through-holes at R=122-126mm (outside RS30's Ø196mm base!) bolt M2
+        positively down onto M1's 4 corner pillars so tilting the stiff gimbal never lifts M2!
     """
     mb = MeshBuilder()
     r_bolt = p.rs30_bolt_hole_d / 2.0
@@ -335,74 +382,137 @@ def build_module2_upper_deck(p: DockParams) -> MeshBuilder:
     z_outer = p.deck_outer_z
     r_ped_chamf = r_ped + (z_seat - z_outer)
     z_m_wall = p.tenon_h + 0.5
+    z_m4_cb = z_outer - 2.6   # 11.4 mm recessed M4 head shoulder (hides screw head flush below Z=14mm!)
 
     thetas = [2.0 * math.pi * k / p.n_angles for k in range(p.n_angles)]
-    sector_types = [1 if is_v3_pillar_slice(k, p.n_angles) else 0 for k in range(p.n_angles)]
+    sector_types = [v3_sector_type(k, p.n_angles) for k in range(p.n_angles)]
 
-    def mortise_radii(theta: float) -> tuple[float, float, float, float, float]:
+    def mortise_radii(theta: float):
         _, _, r_pock, r_out = v3_radii(theta, p)
         r_m_in = r_pock + (p.tenon_inset - p.tenon_tol)
         r_m_out = r_out - (p.tenon_inset - p.tenon_tol)
         r_m_mid = 0.5 * (r_m_in + r_m_out)
-        z_m_peak = min(z_outer - 1.5, z_m_wall + 0.5 * (r_m_out - r_m_in))
-        return r_out, r_m_in, r_m_mid, r_m_out, z_m_peak
+        r_h_in = r_m_mid - p.m4_clear_r
+        r_h_out = r_m_mid + p.m4_clear_r
+        r_c_in = max(r_ped_chamf + 1.5, r_m_mid - p.m4_cb_r)
+        r_c_out = min(r_out - 1.2, r_m_mid + p.m4_cb_r)
+        # Roof slope height at r_h_in / r_h_out (symmetric around r_m_mid)
+        slope = min(1.8, z_m4_cb - 1.4 - z_m_wall)
+        z_m_peak = z_m_wall + max(0.4, slope)
+        frac = (r_h_in - r_m_in) / max(1e-6, (r_m_mid - r_m_in))
+        z_h_roof = z_m_wall + frac * (z_m_peak - z_m_wall)
+        return r_out, r_m_in, r_m_mid, r_m_out, z_m_peak, r_h_in, r_h_out, r_c_in, r_c_out, z_h_roof
 
-    def profile_fn(theta: float, st: int) -> list[tuple[float, float]]:
-        r_out, r_m_in, r_m_mid, r_m_out, z_m_peak = mortise_radii(theta)
-        top_chain = [
-            (r_out, z_outer),
-            (r_ped_chamf, z_outer),
-            (r_ped, z_seat),
-            (r_bolt, z_seat),
-        ]
-        bot_center = [
-            (r_bolt, z_cb),
-            (r_cb_flat, z_cb),
-            (r_cb_mouth, 0.0),
-        ]
+    def loops_for_slice(theta: float, st: int) -> list[list[tuple[float, float]]]:
+        r_out, r_m_in, r_m_mid, r_m_out, z_m_peak, r_h_in, r_h_out, r_c_in, r_c_out, z_h_roof = mortise_radii(theta)
+        bot_center = [(r_bolt, z_cb), (r_cb_flat, z_cb), (r_cb_mouth, 0.0)]
+        top_inner = [(r_ped_chamf, z_outer), (r_ped, z_seat), (r_bolt, z_seat)]
         if st == 0:
-            return [
+            return [[
                 *bot_center,
                 (r_m_in, 0.0), (r_m_mid, 0.0), (r_m_out, 0.0), (r_out, 0.0),
-                *top_chain,
-            ]
-        return [
+                (r_out, z_outer), (r_c_out, z_outer), (r_c_in, z_outer),
+                *top_inner,
+            ]]
+        if st == 1:
+            return [[
+                *bot_center,
+                (r_m_in, 0.0), (r_m_in, z_m_wall), (r_h_in, z_h_roof), (r_m_mid, z_m_peak),
+                (r_h_out, z_h_roof), (r_m_out, z_m_wall), (r_m_out, 0.0), (r_out, 0.0),
+                (r_out, z_outer), (r_c_out, z_outer), (r_c_in, z_outer),
+                *top_inner,
+            ]]
+        # st == 2: Two closed loops separated by the M4 through-hole + recessed counterbore!
+        loop_inner = [
             *bot_center,
-            (r_m_in, 0.0), (r_m_in, z_m_wall), (r_m_mid, z_m_peak), (r_m_out, z_m_wall), (r_m_out, 0.0), (r_out, 0.0),
-            *top_chain,
+            (r_m_in, 0.0), (r_m_in, z_m_wall), (r_h_in, z_h_roof),
+            (r_h_in, z_m4_cb), (r_c_in, z_m4_cb), (r_c_in, z_outer),
+            *top_inner,
         ]
+        loop_outer = [
+            (r_m_out, 0.0), (r_out, 0.0), (r_out, z_outer),
+            (r_c_out, z_outer), (r_c_out, z_m4_cb), (r_h_out, z_m4_cb),
+            (r_h_out, z_h_roof), (r_m_out, z_m_wall),
+        ]
+        return [loop_inner, loop_outer]
 
-    def cheek_triangulator(builder: MeshBuilder, theta: float, st_prev: int, st_curr: int) -> None:
-        _, r_m_in, r_m_mid, r_m_out, z_m_peak = mortise_radii(theta)
-        ct, st_sin = math.cos(theta), math.sin(theta)
+    n = len(thetas)
+    for k in range(n):
+        k_next = (k + 1) % n
+        t0, t1 = thetas[k], thetas[k_next]
+        st = sector_types[k]
+        l0 = loops_for_slice(t0, st)
+        l1 = loops_for_slice(t1, st)
+        for loop0, loop1 in zip(l0, l1):
+            m = len(loop0)
+            v0 = [mb.add_vert(r * math.cos(t0), r * math.sin(t0), z) for (r, z) in loop0]
+            v1 = [mb.add_vert(r * math.cos(t1), r * math.sin(t1), z) for (r, z) in loop1]
+            for i in range(m):
+                i_next = (i + 1) % m
+                mb.add_quad(v0[i], v1[i], v1[i_next], v0[i_next])
 
-        def v(r: float, z: float) -> int:
-            return builder.add_vert(r * ct, r * st_sin, z)
+        k_prev = (k - 1) % n
+        st_prev = sector_types[k_prev]
+        if st_prev != st:
+            _, r_m_in, r_m_mid, r_m_out, z_m_peak, r_h_in, r_h_out, r_c_in, r_c_out, z_h_roof = mortise_radii(t0)
+            ct, st_sin = math.cos(t0), math.sin(t0)
 
-        flip = (st_prev == 0 and st_curr == 1)
-        b0, b1, b2 = v(r_m_in, 0.0), v(r_m_mid, 0.0), v(r_m_out, 0.0)
-        w0, wp, w2 = v(r_m_in, z_m_wall), v(r_m_mid, z_m_peak), v(r_m_out, z_m_wall)
-        for t in ((b0, b1, wp), (b0, wp, w0), (b1, b2, w2), (b1, w2, wp)):
-            builder.add_tri(t[0], t[1], t[2]) if not flip else builder.add_tri(t[0], t[2], t[1])
+            def v(r: float, z: float) -> int:
+                return mb.add_vert(r * ct, r * st_sin, z)
 
-    mb.revolve_sector_profiles(thetas, sector_types, profile_fn, cheek_triangulator)
+            if {st_prev, st} == {0, 1}:
+                flip = (st_prev == 0 and st == 1)
+                b0, b1, b2 = v(r_m_in, 0.0), v(r_m_mid, 0.0), v(r_m_out, 0.0)
+                w0, wh_in, wp, wh_out, w2 = (
+                    v(r_m_in, z_m_wall), v(r_h_in, z_h_roof), v(r_m_mid, z_m_peak),
+                    v(r_h_out, z_h_roof), v(r_m_out, z_m_wall),
+                )
+                tris = (
+                    (b0, b1, wp), (b0, wp, wh_in), (b0, wh_in, w0),
+                    (b1, b2, w2), (b1, w2, wh_out), (b1, wh_out, wp),
+                )
+                for tri in tris:
+                    mb.add_tri(tri[0], tri[1], tri[2]) if not flip else mb.add_tri(tri[0], tri[2], tri[1])
+            elif {st_prev, st} == {1, 2}:
+                # Solid bridge cheek closing the M4 shaft + counterbore between st==1 and st==2
+                flip_h = (st_prev == 2 and st == 1)
+                rh0, rhm, rh1 = v(r_h_in, z_h_roof), v(r_m_mid, z_m_peak), v(r_h_out, z_h_roof)
+                sh0, sh1 = v(r_h_in, z_m4_cb), v(r_h_out, z_m4_cb)
+                cb0, cb1, ct0, ct1 = v(r_c_in, z_m4_cb), v(r_c_out, z_m4_cb), v(r_c_in, z_outer), v(r_c_out, z_outer)
+                tris_h = (
+                    (rh0, sh0, sh1), (rh0, sh1, rh1), (rh0, rh1, rhm),
+                    (cb0, ct0, ct1), (cb0, ct1, cb1),
+                )
+                # Note: wait — sh0/sh1 lie on segment cb0..cb1! Avoid T-junction on z_m4_cb by splitting along sh0/sh1:
+                tris_h_exact = (
+                    (rh0, sh0, sh1), (rh0, sh1, rh1), (rh0, rh1, rhm),
+                    (cb0, ct0, ct1), (cb0, ct1, sh1), (cb0, sh1, sh0), (sh1, ct1, cb1),
+                )
+                for tri in tris_h_exact:
+                    mb.add_tri(tri[0], tri[1], tri[2]) if not flip_h else mb.add_tri(tri[0], tri[2], tri[1])
+
     return mb
 
 
-def build_annular_box_cage(
-    outer_w: float,
-    outer_d: float,
-    outer_cr: float,
-    wall: float,
-    height: float,
-    floor_h: float,
-    window_half_steps: int = 8,
-    n_angles: int = 128,
-) -> MeshBuilder:
+def build_power_brick_pod(p: DockParams) -> MeshBuilder:
+    """
+    Module 3 (V3.2): Dual-End U-Slotted Power Brick Cradle for XGIMI RS30 180W-330W Adapter
+      - Inner cavity: 208.0 (L) x 48.0 (W) x 94.0 (H) mm -> fits flagship 200 x 90 x 40 mm (~1.1 kg) brick!
+      - Outer bbox: 220.0 (L) x 60.0 (W) x 102.0 (H) mm (<= 256 mm Bambu bed!)
+      - 4 wrap-around corner L-columns retain the brick longitudinally, while 32mm wide top-open U-slots on BOTH
+        +Y and -Y ends let thick AC-in (IEC C13) and DC-out cords + strain-relief boots drop straight in from above!
+      - Dual side ventilation windows separated by a solid center rib keep the 300W brick cool with zero wall flex.
+    """
     mb = MeshBuilder()
-    oh_x, oh_y = outer_w / 2.0, outer_d / 2.0
-    ih_x, ih_y = oh_x - wall, oh_y - wall
-    icr = max(2.0, outer_cr - wall)
+    wall = 6.0
+    floor_h = 8.0
+    height = p.brick_h + floor_h         # 102.0 mm
+    oh_x = p.brick_t / 2.0 + wall        # 30.0 mm (60.0 mm outer width)
+    oh_y = p.brick_w / 2.0 + wall        # 110.0 mm (220.0 mm outer length)
+    ih_x = p.brick_t / 2.0               # 24.0 mm (48.0 mm inner width)
+    ih_y = p.brick_w / 2.0               # 104.0 mm (208.0 mm inner length)
+    outer_cr = 12.0
+    icr = 6.0
 
     def rect_ray(theta: float, hx: float, hy: float, cr: float) -> float:
         ct, st = abs(math.cos(theta)), abs(math.sin(theta))
@@ -415,9 +525,31 @@ def build_annular_box_cage(
         disc = max(0.0, b * b - (cx * cx + cy * cy - cr * cr))
         return b + math.sqrt(disc)
 
-    thetas = [2.0 * math.pi * k / n_angles for k in range(n_angles)]
-    q = n_angles // 4
-    sector_types = [0 if ((k % q) < window_half_steps or (k % q) >= q - window_half_steps) else 1 for k in range(n_angles)]
+    # Exact transition angles so end U-slots are |x| < 15.5 mm on +/-Y ends (retaining 8.5mm corner hooks on each side!)
+    # and side vent windows are |y| in (20.0, 74.0) mm on +/-X sides (leaving a 40mm center rib + 36mm corner L-walls!)
+    end_slot_half_x = 15.5
+    vent_y_lo, vent_y_hi = 20.0, 74.0
+
+    raw_angles: set[float] = set()
+    for k in range(360):
+        raw_angles.add(round(2.0 * math.pi * k / 360.0, 8))
+    # Add exact boundary rays for crisp orthogonal window/slot cheeks
+    a_end = math.atan2(oh_y, end_slot_half_x)     # ~81.98° from +X
+    a_vlo = math.atan2(vent_y_lo, oh_x)           # ~33.69° from +X
+    a_vhi = math.atan2(vent_y_hi, oh_x)           # ~67.93° from +X
+    for base in (0.0, math.pi):
+        for ang in (a_vlo, a_vhi, a_end, math.pi - a_end, math.pi - a_vhi, math.pi - a_vlo):
+            raw_angles.add(round((base + ang) % (2.0 * math.pi), 8))
+
+    thetas = sorted(raw_angles)
+    sector_types: list[int] = []
+    for k in range(len(thetas)):
+        t_mid = 0.5 * (thetas[k] + (thetas[k + 1] if k + 1 < len(thetas) else 2.0 * math.pi))
+        ro_m = rect_ray(t_mid, oh_x, oh_y, outer_cr)
+        xm, ym = abs(ro_m * math.cos(t_mid)), abs(ro_m * math.sin(t_mid))
+        is_end_uslot = (ym > oh_y - 2.0) and (xm < end_slot_half_x - 1e-4)
+        is_side_vent = (xm > oh_x - 2.0) and (vent_y_lo + 1e-4 < ym < vent_y_hi - 1e-4)
+        sector_types.append(0 if (is_end_uslot or is_side_vent) else 1)
 
     def profile_fn(theta: float, st: int) -> list[tuple[float, float]]:
         ro = rect_ray(theta, oh_x, oh_y, outer_cr)
@@ -463,21 +595,10 @@ def main() -> None:
     params = DockParams()
 
     modules = [
-        ("01_mac_studio_base_cradle.stl", "StudioBeam V3.1 Dual-Rail Cradle", build_module1_base_cradle(params)),
-        ("02_rs30_gimbal_upper_deck.stl", "StudioBeam V3.1 Pedestal Deck", build_module2_upper_deck(params)),
-        (
-            "03_power_brick_cable_pod.stl",
-            "StudioBeam V3.1 Side Power Pod",
-            build_annular_box_cage(
-                outer_w=params.brick_t + 12.0,
-                outer_d=params.brick_w + 16.0,
-                outer_cr=14.0,
-                wall=6.0,
-                height=params.brick_h + 10.0,
-                floor_h=8.0,
-            ),
-        ),
-        ("04_bottom_dust_filter_frame.stl", "StudioBeam V3.1 Dust Filter", build_module4_dust_filter_frame(params)),
+        ("01_mac_studio_base_cradle.stl", "StudioBeam V3.2 Locked Cradle", build_module1_base_cradle(params)),
+        ("02_rs30_gimbal_upper_deck.stl", "StudioBeam V3.2 Locked Pedestal", build_module2_upper_deck(params)),
+        ("03_power_brick_cable_pod.stl", "StudioBeam V3.2 208mm PSU Pod", build_power_brick_pod(params)),
+        ("04_bottom_dust_filter_frame.stl", "StudioBeam V3.2 Dust Filter", build_module4_dust_filter_frame(params)),
     ]
 
     t_front_edge = math.radians(43.0)
@@ -489,7 +610,7 @@ def main() -> None:
     rear_port_window_w = round(2.0 * abs(r_pock_232 * math.cos(t_rear_edge)), 2)
 
     report = {
-        "version": "3.1-full-audit-dual-rail-pedestal",
+        "version": "3.2-psu208-m4lock-cablesim",
         "parameters_mm": asdict(params),
         "engineering_verification": {
             "front_slide_in_portal_bare_mm": front_portal_clear_w,
@@ -503,6 +624,9 @@ def main() -> None:
             "rs30_pedestal_boss_d_mm": params.rs30_pedestal_d,
             "rs30_u_arm_step_down_clearance_mm": round(params.deck_seat_z - params.deck_outer_z, 1),
             "thumbscrew_clamp_thickness_mm": round(params.deck_seat_z - params.cb_depth_z, 1),
+            "m4_pillar_lock_bolts": "4x M4x25mm recessed corner bolts at R=122.3mm (front) & R=126.4mm (rear)",
+            "psu_pod_inner_cavity_mm": [params.brick_w, params.brick_t, params.brick_h],
+            "psu_pod_dual_end_uslot_width_mm": 31.0,
             "scheme_c_min_360_gap_mm": round(params.side_by_side_dx - (params.mac_w / 2 + params.mac_side_clearance + params.wall_thickness) - params.rs30_swept_r, 1),
         },
         "modules": {},

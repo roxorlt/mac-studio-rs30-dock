@@ -1,5 +1,5 @@
 {
-  "version": "3.1-full-audit-dual-rail-pedestal",
+  "version": "3.2-psu208-m4lock-cablesim",
   "parameters_mm": {
     "mac_w": 197.0,
     "mac_d": 197.0,
@@ -13,9 +13,9 @@
     "rs30_swept_r": 166.5,
     "rs30_base_d": 196.0,
     "rs30_bolt_hole_d": 7.0,
-    "brick_w": 188.0,
-    "brick_t": 50.0,
-    "brick_h": 92.0,
+    "brick_w": 208.0,
+    "brick_t": 48.0,
+    "brick_h": 94.0,
     "mac_side_clearance": 1.8,
     "base_intake_half": 87.0,
     "rail_inner_half": 91.5,
@@ -24,8 +24,11 @@
     "shelf_z": 26.0,
     "air_gap_above_mac": 18.0,
     "tenon_h": 8.5,
-    "tenon_inset": 1.9,
+    "tenon_inset": 1.35,
     "tenon_tol": 0.25,
+    "m4_lock_bore_r": 1.9,
+    "m4_clear_r": 2.2,
+    "m4_cb_r": 4.1,
     "deck_seat_z": 17.0,
     "deck_outer_z": 14.0,
     "rs30_pedestal_d": 176.0,
@@ -47,12 +50,19 @@
     "rs30_pedestal_boss_d_mm": 176.0,
     "rs30_u_arm_step_down_clearance_mm": 3.0,
     "thumbscrew_clamp_thickness_mm": 8.5,
+    "m4_pillar_lock_bolts": "4x M4x25mm recessed corner bolts at R=122.3mm (front) & R=126.4mm (rear)",
+    "psu_pod_inner_cavity_mm": [
+      208.0,
+      48.0,
+      94.0
+    ],
+    "psu_pod_dual_end_uslot_width_mm": 31.0,
     "scheme_c_min_360_gap_mm": 21.2
   },
   "modules": {
     "01_mac_studio_base_cradle.stl": {
-      "vertices": 2862,
-      "triangles": 5724,
+      "vertices": 3122,
+      "triangles": 6244,
       "is_watertight_2manifold": true,
       "duplicate_half_edges": 0,
       "unmatched_half_edges": 0,
@@ -61,18 +71,18 @@
         216.6,
         139.5
       ],
-      "solid_volume_cm3": 429.73,
-      "surface_area_cm2": 1253.78,
-      "fdm_effective_cm3_30pct": 210.37,
-      "mass_petg_fdm_g": 267.2,
-      "mass_jlc_solid_petg_g": 545.8,
-      "mass_sls_pa12_g": 434.0,
+      "solid_volume_cm3": 430.45,
+      "surface_area_cm2": 1271.5,
+      "fdm_effective_cm3_30pct": 211.73,
+      "mass_petg_fdm_g": 268.9,
+      "mass_jlc_solid_petg_g": 546.7,
+      "mass_sls_pa12_g": 434.8,
       "file": "/home/antigravity/mac-rs30-dock/stl/01_mac_studio_base_cradle.stl",
-      "file_size_kb": 279.6
+      "file_size_kb": 305.0
     },
     "02_rs30_gimbal_upper_deck.stl": {
-      "vertices": 4204,
-      "triangles": 8408,
+      "vertices": 5204,
+      "triangles": 10424,
       "is_watertight_2manifold": true,
       "duplicate_half_edges": 0,
       "unmatched_half_edges": 0,
@@ -81,34 +91,34 @@
         216.6,
         17.0
       ],
-      "solid_volume_cm3": 698.69,
-      "surface_area_cm2": 1111.43,
-      "fdm_effective_cm3_30pct": 281.81,
-      "mass_petg_fdm_g": 357.9,
-      "mass_jlc_solid_petg_g": 887.3,
-      "mass_sls_pa12_g": 705.7,
+      "solid_volume_cm3": 696.94,
+      "surface_area_cm2": 1108.34,
+      "fdm_effective_cm3_30pct": 281.08,
+      "mass_petg_fdm_g": 357.0,
+      "mass_jlc_solid_petg_g": 885.1,
+      "mass_sls_pa12_g": 703.9,
       "file": "/home/antigravity/mac-rs30-dock/stl/02_rs30_gimbal_upper_deck.stl",
-      "file_size_kb": 410.6
+      "file_size_kb": 509.1
     },
     "03_power_brick_cable_pod.stl": {
-      "vertices": 648,
-      "triangles": 1296,
+      "vertices": 1892,
+      "triangles": 3784,
       "is_watertight_2manifold": true,
       "duplicate_half_edges": 0,
       "unmatched_half_edges": 0,
       "bbox_mm": [
-        62.0,
-        204.0,
+        60.0,
+        220.0,
         102.0
       ],
-      "solid_volume_cm3": 149.86,
-      "surface_area_cm2": 641.38,
-      "fdm_effective_cm3_30pct": 86.62,
-      "mass_petg_fdm_g": 110.0,
-      "mass_jlc_solid_petg_g": 190.3,
-      "mass_sls_pa12_g": 151.4,
+      "solid_volume_cm3": 175.07,
+      "surface_area_cm2": 754.96,
+      "fdm_effective_cm3_30pct": 101.56,
+      "mass_petg_fdm_g": 129.0,
+      "mass_jlc_solid_petg_g": 222.3,
+      "mass_sls_pa12_g": 176.8,
       "file": "/home/antigravity/mac-rs30-dock/stl/03_power_brick_cable_pod.stl",
-      "file_size_kb": 63.4
+      "file_size_kb": 184.8
     },
     "04_bottom_dust_filter_frame.stl": {
       "vertices": 768,
@@ -132,9 +142,9 @@
     }
   },
   "totals": {
-    "total_fdm_petg_30pct_infill_g": 770.9,
-    "core_2_modules_fdm_petg_g": 625.1,
-    "total_solid_petg_equiv_g": 1666.9,
-    "total_sls_pa12_nylon_g": 1325.7
+    "total_fdm_petg_30pct_infill_g": 790.7,
+    "core_2_modules_fdm_petg_g": 625.9,
+    "total_solid_petg_equiv_g": 1697.6,
+    "total_sls_pa12_nylon_g": 1350.1
   }
 }
