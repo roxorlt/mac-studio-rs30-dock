@@ -1,5 +1,5 @@
 {
-  "version": "2.0-structural-clearance-verified",
+  "version": "3.0-front-slide-cassette-portal",
   "parameters_mm": {
     "mac_w": 197.0,
     "mac_d": 197.0,
@@ -17,8 +17,8 @@
     "brick_t": 44.0,
     "brick_h": 92.0,
     "mac_side_clearance": 1.2,
-    "intake_hole_d": 182.0,
-    "wall_thickness": 7.5,
+    "rail_inner_half": 91.2,
+    "wall_thickness": 8.0,
     "base_ring_h": 6.0,
     "shelf_z": 26.0,
     "air_gap_above_mac": 18.0,
@@ -30,61 +30,59 @@
     "deck_lip_top_z": 20.0,
     "rs30_seat_d": 198.4,
     "rs30_lip_outer_d": 207.0,
-    "side_by_side_dx": 294.0,
-    "n_angles": 192,
-    "corner_half_steps": 10
+    "side_by_side_dx": 295.0,
+    "n_angles": 360
   },
   "engineering_verification": {
+    "front_slide_in_portal_width_mm": 199.4,
+    "mac_studio_body_width_mm": 197.0,
+    "front_foot_channel_width_mm": 182.4,
+    "mac_studio_foot_diameter_mm": 179.2,
+    "rear_port_and_power_btn_window_mm": 153.83,
     "rs30_mass_kg": 5.4,
-    "design_load_3x_sf_kg": 16.2,
-    "pillar_total_area_mm2": 2080,
     "deck_solid_bridge_thickness_mm": 16.0,
-    "estimated_petg_deflection_mm": 0.04,
-    "rs30_360_swept_radius_mm": 166.5,
-    "scheme_a_rear_port_clearance": "100% open (-Y unobstructed; Power Pod moved to blank -X/+X side)",
-    "scheme_a_u_arm_360_clearance": "100% open (outer deck corners stepped 1mm below turntable seat)",
-    "scheme_c_min_360_gap_mm": 20.3
+    "scheme_c_min_360_gap_mm": 20.8
   },
   "modules": {
     "01_mac_studio_base_cradle.stl": {
-      "vertices": 1488,
-      "triangles": 2976,
+      "vertices": 2502,
+      "triangles": 5004,
       "is_watertight_2manifold": true,
       "duplicate_half_edges": 0,
       "unmatched_half_edges": 0,
       "bbox_mm": [
-        214.4,
-        214.4,
+        215.4,
+        215.4,
         139.0
       ],
-      "solid_volume_cm3": 606.3,
-      "surface_area_cm2": 1462.48,
-      "fdm_effective_cm3_30pct": 276.89,
-      "mass_petg_fdm_g": 351.7,
-      "mass_jlc_solid_petg_g": 770.0,
-      "mass_sls_pa12_g": 612.4,
+      "solid_volume_cm3": 404.89,
+      "surface_area_cm2": 1178.32,
+      "fdm_effective_cm3_30pct": 198.01,
+      "mass_petg_fdm_g": 251.5,
+      "mass_jlc_solid_petg_g": 514.2,
+      "mass_sls_pa12_g": 408.9,
       "file": "/home/antigravity/mac-rs30-dock/stl/01_mac_studio_base_cradle.stl",
-      "file_size_kb": 145.4
+      "file_size_kb": 244.4
     },
     "02_rs30_gimbal_upper_deck.stl": {
-      "vertices": 2472,
-      "triangles": 4944,
+      "vertices": 4564,
+      "triangles": 9128,
       "is_watertight_2manifold": true,
       "duplicate_half_edges": 0,
       "unmatched_half_edges": 0,
       "bbox_mm": [
-        214.4,
-        214.4,
+        215.4,
+        215.4,
         20.0
       ],
-      "solid_volume_cm3": 696.61,
-      "surface_area_cm2": 1141.13,
-      "fdm_effective_cm3_30pct": 283.11,
-      "mass_petg_fdm_g": 359.6,
-      "mass_jlc_solid_petg_g": 884.7,
-      "mass_sls_pa12_g": 703.6,
+      "solid_volume_cm3": 712.91,
+      "surface_area_cm2": 1154.15,
+      "fdm_effective_cm3_30pct": 288.85,
+      "mass_petg_fdm_g": 366.8,
+      "mass_jlc_solid_petg_g": 905.4,
+      "mass_sls_pa12_g": 720.0,
       "file": "/home/antigravity/mac-rs30-dock/stl/02_rs30_gimbal_upper_deck.stl",
-      "file_size_kb": 241.5
+      "file_size_kb": 445.8
     },
     "03_power_brick_cable_pod.stl": {
       "vertices": 648,
@@ -113,24 +111,24 @@
       "duplicate_half_edges": 0,
       "unmatched_half_edges": 0,
       "bbox_mm": [
-        184.0,
-        184.0,
+        180.0,
+        180.0,
         3.2
       ],
-      "solid_volume_cm3": 35.99,
-      "surface_area_cm2": 285.28,
-      "fdm_effective_cm3_30pct": 29.33,
-      "mass_petg_fdm_g": 37.2,
-      "mass_jlc_solid_petg_g": 45.7,
-      "mass_sls_pa12_g": 36.4,
+      "solid_volume_cm3": 31.78,
+      "surface_area_cm2": 258.66,
+      "fdm_effective_cm3_30pct": 26.34,
+      "mass_petg_fdm_g": 33.4,
+      "mass_jlc_solid_petg_g": 40.4,
+      "mass_sls_pa12_g": 32.1,
       "file": "/home/antigravity/mac-rs30-dock/stl/04_bottom_dust_filter_frame.stl",
       "file_size_kb": 75.1
     }
   },
   "totals": {
-    "total_fdm_petg_30pct_infill_g": 855.4,
-    "core_2_modules_fdm_petg_g": 711.3,
-    "total_solid_petg_equiv_g": 1884.7,
-    "total_sls_pa12_nylon_g": 1499.0
+    "total_fdm_petg_30pct_infill_g": 758.6,
+    "core_2_modules_fdm_petg_g": 618.3,
+    "total_solid_petg_equiv_g": 1644.3,
+    "total_sls_pa12_nylon_g": 1307.6
   }
 }

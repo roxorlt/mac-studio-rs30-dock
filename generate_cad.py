@@ -1,25 +1,23 @@
 #!/usr/bin/env python3
 """
-StudioBeam DuoDock V2 — Structural & Clearance-Verified Parametric CAD Generator
+StudioBeam DuoDock V3 — Front-Slide Cassette Portal + Heavy-Duty 5.4kg Load & 360° Clearance CAD
 Target Hardware:
   1. Apple Mac Studio (M5 Max / M5 Ultra, 2026):
      - Body: 197.0 x 197.0 x 95.0 mm (87.0 mm aluminum unibody + 8.0 mm bottom foot)
-     - Corner Radius: R30.4 mm
-     - Bottom Air Intake Ring: Ø179.2 mm
-     - Rear Panel (-Y): 4x TB5, 10GbE, AC Power, 2x USB-A, HDMI 2.1, 3.5mm, Power btn + 4000+ exhaust holes
+     - Corner Radius: R30.4 mm, Bottom Air Intake Ring: Ø179.2 mm (R = 89.6 mm)
   2. XGIMI RS30 Series (RS30 Pro / Pro Max / Ultra / Ultra Max, 2026):
-     - Overall (with integrated U-gimbal): 298.0 (W) x 249.0 (H) x 190.0 (D) mm
-     - Weight: 5.3 - 5.4 kg (Design static+dynamic load w/ 3x SF = 16.3 kgf / 160 N)
+     - Overall (with integrated U-gimbal): 298.0 (W) x 249.0 (H) x 190.0 (D) mm, 5.3 - 5.4 kg
      - 360° Horizontal Swept Radius: R_sweep = 166.5 mm (Ø333.0 mm swept cylinder)
      - Swivel Base Turntable: ~Ø196 mm, center 1/4"-20 UNC mount thread
-     - External Power Adapter: ~185 x 85 x 40 mm (280W-300W)
 
-V2 Engineering Upgrades:
-  - Heavy-duty 7.5 mm corner exoskeleton pillars (>2,000 mm² total section, buckling >3,000 kg)
-  - 16.0 mm solid-depth Upper Bridge Deck (8x higher EI bending stiffness vs V1; <0.05 mm deflection under 5.4 kg)
-  - True 100% support-free flat-bed printing on Upper Deck via 45° self-supporting mortise & thumbscrew roofs
-  - Stepped-down outer deck corners (R > 103.5 mm dropped below turntable seat) for zero 360° U-arm interference
-  - Side-mounted Power Brick Pod (-X/+X blank side of Mac Studio) so Mac Studio's -Y rear ports & exhaust stay 100% unobstructed
+V3 Key Upgrade — Front-Loading Slide-In Cassette Bay ("前推滑入式导轨机舱"):
+  - Front-Left & Front-Right pillars sit strictly outside Mac Studio's width (|X| = 99.7..107.7 mm),
+    creating a 199.4 mm wide unobstructed front portal (+Y) with full-height 105 mm clearance!
+  - Left & Right horizontal slide rails (|X| = 91.2..99.7 mm at Z = 26.0 mm) clear Mac Studio's
+    Ø179.2 mm (|X| <= 89.6 mm) circular bottom foot during horizontal insertion.
+  - Rear-Left & Rear-Right pillars retain R31.6 curved backstops so sliding Mac Studio in from the
+    front automatically stops at exact center, while leaving a 152 mm wide rear port & power-button window!
+  - Mac Studio can now be slid straight in/out from the front WITHOUT lifting or touching the 5.4 kg RS30 on top!
 """
 
 from __future__ import annotations
@@ -46,59 +44,72 @@ class DockParams:
     rs30_total_w: float = 298.0
     rs30_total_h: float = 249.0
     rs30_total_d: float = 190.0
-    rs30_swept_r: float = 166.5    # Worst-case 360° diagonal swept radius (pitched or flat)
+    rs30_swept_r: float = 166.5
     rs30_base_d: float = 196.0
-    rs30_bolt_hole_d: float = 7.0  # 1/4"-20 UNC (6.35mm) + clearance
+    rs30_bolt_hole_d: float = 7.0
 
     # Power brick bay (RS30 280W-300W adapter, mounted alongside Left/Right blank wall)
     brick_w: float = 188.0
     brick_t: float = 44.0
     brick_h: float = 92.0
 
-    # V2 Structural Clearances & Dimensions (mm)
-    mac_side_clearance: float = 1.2   # 0.2mm print tol + 1.0mm anti-scratch velvet strip
-    intake_hole_d: float = 182.0      # > 179.2mm so Mac Studio circular foot nests freely
-    wall_thickness: float = 7.5       # Upgraded 7.5mm exoskeleton corner wall (214.4mm footprint <= 256mm bed)
-    base_ring_h: float = 6.0          # 6.0mm bed-adhesion & tie ring
-    shelf_z: float = 26.0             # Elevates Mac Studio corners 26mm (foot bottom 18mm above desk)
-    air_gap_above_mac: float = 18.0   # 18mm cool air plenum above Mac Studio top
-    tenon_h: float = 8.0              # Interlocking corner tenon height (fits into 45°-roofed M2 mortises)
-    tenon_inset: float = 1.9          # Tenon wall inset (leaves 3.7mm radial tongue width)
-    tenon_tol: float = 0.25           # Assembly clearance in Upper Deck mortise slots
+    # V3 Front-Slide Cassette & Heavy-Duty Structural Clearances (mm)
+    mac_side_clearance: float = 1.2   # 197.0 + 2*1.2 = 199.4 mm clear front slide-in width!
+    rail_inner_half: float = 91.2     # 182.4 mm foot channel (> Ø179.2 mm circular foot -> 8.5 mm wide side rails!)
+    wall_thickness: float = 8.0       # 8.0 mm heavy-duty pillar wall -> 215.4 x 215.4 mm outer (fits 256mm bed!)
+    base_ring_h: float = 6.0          # 6.0 mm bed tie-frame (12 mm BELOW Mac Studio's Z=18mm foot bottom!)
+    shelf_z: float = 26.0             # Slide-rail Z height (elevates Mac Studio corners 26mm; foot at Z=18mm)
+    air_gap_above_mac: float = 18.0   # 18 mm cool air plenum & finger lift clearance above Mac Studio
+    tenon_h: float = 8.0
+    tenon_inset: float = 1.9
+    tenon_tol: float = 0.25
 
-    # V2 Heavy-Duty Support-Free Upper Deck parameters (mm)
-    deck_seat_z: float = 16.0         # 16.0mm thick structural bridge plate under RS30 (8x stiffer than V1)
-    deck_outer_z: float = 15.0        # Outer corners (R > 103.5mm) stepped 1mm BELOW RS30 base for 360° U-arm clearance
-    deck_lip_top_z: float = 20.0      # 4.0mm tall circular anti-slip lip around Ø198.4mm seat
-    rs30_seat_d: float = 198.4        # Ø198.4mm seat pocket for RS30 Ø196mm round turntable
-    rs30_lip_outer_d: float = 207.0   # Ø207.0mm (R=103.5mm < 107.2mm outer_half) circular turret outer diameter
+    # V3 Heavy-Duty Support-Free Upper Deck parameters (mm)
+    deck_seat_z: float = 16.0         # 16.0 mm solid structural bridge plate
+    deck_outer_z: float = 15.0        # Outer corners stepped 1mm below turntable seat for 360° U-arm clearance
+    deck_lip_top_z: float = 20.0      # 4.0 mm tall circular anti-slip retaining lip
+    rs30_seat_d: float = 198.4
+    rs30_lip_outer_d: float = 207.0
 
-    # Side-by-side (Scheme C) center-to-center X spacing for zero 360° collision
-    side_by_side_dx: float = 294.0    # 107.2 (M1 half) + 166.5 (RS30 360° swept R) + 20.3mm safety gap!
-
-    # Angular resolution (must be divisible by 4)
-    n_angles: int = 192
-    corner_half_steps: int = 10
+    side_by_side_dx: float = 295.0    # 107.7 + 166.5 + 20.8 mm safety gap in Scheme C
+    n_angles: int = 360               # Exact 1° angular resolution!
 
 
-def rounded_square_radius(theta: float, half_w: float, corner_r: float) -> float:
+def asym_rounded_square_radius(theta: float, half_w: float, cr_front: float, cr_rear: float) -> float:
+    """
+    Exact ray radius from (0,0) to [-half_w, half_w]^2 where:
+      - Front half (y >= 0, sin(theta) >= 0) uses corner radius cr_front
+      - Rear half  (y <  0, sin(theta) <  0) uses corner radius cr_rear
+    Since both halves share the exact flat side |x| = half_w near y = 0, this is C^infinity across y = 0!
+    """
+    cr = cr_front if math.sin(theta) >= 0.0 else cr_rear
     ct = abs(math.cos(theta))
     st = abs(math.sin(theta))
-    c = half_w - corner_r
+    c = half_w - cr
     if ct > 1e-9 and (half_w * (st / ct)) <= c:
         return half_w / ct
     if st > 1e-9 and (half_w * (ct / st)) <= c:
         return half_w / st
     b = c * (ct + st)
-    disc = max(0.0, b * b - (2.0 * c * c - corner_r * corner_r))
+    disc = max(0.0, b * b - (2.0 * c * c - cr * cr))
     return b + math.sqrt(disc)
 
 
-def is_corner_slice(k: int, n_angles: int, corner_half_steps: int) -> bool:
-    q = n_angles // 4
-    k_mod = k % q
-    center = q // 2
-    return abs(k_mod - center) < corner_half_steps
+def is_v3_pillar_slice(k: int, n_angles: int = 360) -> bool:
+    """
+    Defines the 4 structural columns in polar angle degrees (0° = +X Right, 90° = +Y Front, 180° = -X Left, 270° = -Y Rear):
+      - Front-Right Portal Column: [20°, 43°]   -> inner wall lies 100% on flat plane X = +99.7 mm (front window 43°..137° is 199.4mm wide!)
+      - Front-Left  Portal Column: [137°, 160°] -> inner wall lies 100% on flat plane X = -99.7 mm
+      - Rear-Left   Backstop Col : [198°, 232°] -> wraps R31.6 rear corner (22.8mm backstop) to auto-stop Mac Studio on slide-in
+      - Rear-Right  Backstop Col : [308°, 342°] -> wraps R31.6 rear corner (leaves 232°..308° = 153.8mm wide rear port & power-btn window!)
+    """
+    deg = (k * 360.0) / n_angles
+    return (
+        (20.0 <= deg < 43.0)
+        or (137.0 <= deg < 160.0)
+        or (198.0 <= deg < 232.0)
+        or (308.0 <= deg < 342.0)
+    )
 
 
 class MeshBuilder:
@@ -119,9 +130,8 @@ class MeshBuilder:
         return idx
 
     def add_tri(self, i0: int, i1: int, i2: int) -> None:
-        if i0 == i1 or i1 == i2 or i2 == i0:
-            return
-        self.tris.append((i0, i1, i2))
+        if i0 != i1 and i1 != i2 and i2 != i0:
+            self.tris.append((i0, i1, i2))
 
     def add_quad(self, p00: int, p10: int, p11: int, p01: int) -> None:
         self.add_tri(p00, p10, p11)
@@ -166,7 +176,6 @@ class MeshBuilder:
         maxs = verts_np.max(axis=0)
         dims = maxs - mins
 
-        # Realistic FDM slicer weight estimate: 4 walls (1.6mm) + 5 top/bot (1.0mm) + 30% Gyroid infill
         shell_vol_mm3 = min(vol_mm3, area_mm2 * 1.45 * 0.64)
         infill_vol_mm3 = max(0.0, vol_mm3 - shell_vol_mm3) * 0.30
         effective_fdm_cm3 = (shell_vol_mm3 + infill_vol_mm3) / 1000.0
@@ -218,39 +227,46 @@ class MeshBuilder:
                 )
 
 
+def v3_radii(theta: float, p: DockParams) -> tuple[float, float, float]:
+    """Returns (r_rail, r_pock, r_out) at angle theta for the V3 Front-Slide Cassette Portal."""
+    pocket_half = p.mac_w / 2.0 + p.mac_side_clearance       # 99.7 mm
+    rear_pock_cr = p.mac_corner_r + p.mac_side_clearance     # 31.6 mm
+    front_pock_cr = 1.0                                      # Straight portal sides |X| = 99.7 mm up to Y = 98.7 mm!
+
+    outer_half = pocket_half + p.wall_thickness              # 107.7 mm (215.4 mm outer)
+    rear_out_cr = rear_pock_cr + p.wall_thickness            # 39.6 mm
+    front_out_cr = 12.0                                      # Smooth rounded outer front corners
+
+    # Inner foot/rail boundary: straight |X| = 91.2 mm in front (clears Ø179.2mm foot sliding in!), rounded R24 in rear
+    r_rail = asym_rounded_square_radius(theta, p.rail_inner_half, cr_front=3.5, cr_rear=24.0)
+    r_pock = asym_rounded_square_radius(theta, pocket_half, cr_front=front_pock_cr, cr_rear=rear_pock_cr)
+    r_out = asym_rounded_square_radius(theta, outer_half, cr_front=front_out_cr, cr_rear=rear_out_cr)
+    return r_rail, r_pock, r_out
+
+
 def build_module1_base_cradle(p: DockParams) -> MeshBuilder:
     """
-    Module 1 (V2): M5 Mac Studio Elevated Airflow Cradle & Heavy-Duty 7.5mm Exoskeleton Pillars
-    - Base ring z = 0..6.0 mm
-    - Corner pedestals z = 6.0..26.0 mm
-    - Corner Mac Studio shelf at z = 26.0 mm (outside Ø182mm intake foot opening)
-    - Corner exoskeleton pillars z = 26.0..131.0 mm (87mm Mac Studio body + 18mm cool air plenum)
-    - Top interlocking tenons z = 131.0..139.0 mm
+    Module 1 (V3): Front-Loading Slide-In Cassette Cradle & Heavy-Duty Exoskeleton Portal
+    - Mac Studio slides straight in/out through the +Y front portal (199.4 mm clear width x 105.0 mm height)
+      on two 8.5 mm wide horizontal rails (|X| = 91.2..99.7 mm at Z = 26.0 mm) WITHOUT touching the RS30 on top!
     """
     mb = MeshBuilder()
-    pocket_half = p.mac_w / 2.0 + p.mac_side_clearance             # 99.7 mm
-    pocket_cr = p.mac_corner_r + p.mac_side_clearance              # 31.6 mm
-    outer_half = pocket_half + p.wall_thickness                    # 107.2 mm (214.4 mm outer)
-    outer_cr = pocket_cr + p.wall_thickness                        # 39.1 mm
-    r_intake = p.intake_hole_d / 2.0                               # 91.0 mm
-
     z_ring = p.base_ring_h                                         # 6.0 mm
     z_shelf = p.shelf_z                                            # 26.0 mm
     z_col_top = p.shelf_z + p.mac_body_h + p.air_gap_above_mac     # 131.0 mm
     z_tenon_top = z_col_top + p.tenon_h                            # 139.0 mm
 
     thetas = [2.0 * math.pi * k / p.n_angles for k in range(p.n_angles)]
-    sector_types = [1 if is_corner_slice(k, p.n_angles, p.corner_half_steps) else 0 for k in range(p.n_angles)]
+    sector_types = [1 if is_v3_pillar_slice(k, p.n_angles) else 0 for k in range(p.n_angles)]
 
     def profile_fn(theta: float, st: int) -> list[tuple[float, float]]:
-        r_out = rounded_square_radius(theta, outer_half, outer_cr)
+        r_rail, r_pock, r_out = v3_radii(theta, p)
         if st == 0:
-            return [(r_intake, 0.0), (r_out, 0.0), (r_out, z_ring), (r_intake, z_ring)]
-        r_pock = rounded_square_radius(theta, pocket_half, pocket_cr)
+            return [(r_rail, 0.0), (r_out, 0.0), (r_out, z_ring), (r_rail, z_ring)]
         r_t_in = r_pock + p.tenon_inset
         r_t_out = r_out - p.tenon_inset
         return [
-            (r_intake, 0.0),
+            (r_rail, 0.0),
             (r_out, 0.0),
             (r_out, z_ring),
             (r_out, z_shelf),
@@ -261,13 +277,12 @@ def build_module1_base_cradle(p: DockParams) -> MeshBuilder:
             (r_t_in, z_col_top),
             (r_pock, z_col_top),
             (r_pock, z_shelf),
-            (r_intake, z_shelf),
-            (r_intake, z_ring),
+            (r_rail, z_shelf),
+            (r_rail, z_ring),
         ]
 
     def cheek_triangulator(builder: MeshBuilder, theta: float, st_prev: int, st_curr: int) -> None:
-        r_out = rounded_square_radius(theta, outer_half, outer_cr)
-        r_pock = rounded_square_radius(theta, pocket_half, pocket_cr)
+        r_rail, r_pock, r_out = v3_radii(theta, p)
         r_t_in = r_pock + p.tenon_inset
         r_t_out = r_out - p.tenon_inset
         ct, st_sin = math.cos(theta), math.sin(theta)
@@ -276,8 +291,8 @@ def build_module1_base_cradle(p: DockParams) -> MeshBuilder:
             return builder.add_vert(r * ct, r * st_sin, z)
 
         flip = (st_prev == 1 and st_curr == 0)
-        a0, a1 = v(r_intake, z_ring), v(r_out, z_ring)
-        b0, b1, b2 = v(r_intake, z_shelf), v(r_pock, z_shelf), v(r_out, z_shelf)
+        a0, a1 = v(r_rail, z_ring), v(r_out, z_ring)
+        b0, b1, b2 = v(r_rail, z_shelf), v(r_pock, z_shelf), v(r_out, z_shelf)
         c0, c1, c2, c3 = v(r_pock, z_col_top), v(r_t_in, z_col_top), v(r_t_out, z_col_top), v(r_out, z_col_top)
         d0, d1 = v(r_t_in, z_tenon_top), v(r_t_out, z_tenon_top)
 
@@ -295,41 +310,29 @@ def build_module1_base_cradle(p: DockParams) -> MeshBuilder:
 
 def build_module2_upper_deck(p: DockParams) -> MeshBuilder:
     """
-    Module 2 (V2): Heavy-Duty 16mm Structural Bridge Deck (Support-Free Flat Bottom + 360° Stepped Corners)
-    - Prints directly bottom-down (z = 0) with 0 supports:
-      - Center 1/4"-20 thumbscrew recess uses a 45° self-supporting conical roof (r=13.5@z=0 -> r=3.5@z=10)
-      - 4 corner mortise slots use 45° self-supporting peaked roofs (z_wall=8.5 -> z_peak~10.6)
-    - Structural load bridge is 16.0 mm solid thickness across the entire span (8x stiffer than V1)
-    - Circular turret (R=99.2..103.5mm, z=20.0mm) locks RS30 Ø196mm gimbal base
-    - Outer corners (R > 103.5mm) drop down to z=15.0mm (1mm below RS30 foot) for 100% 360° U-arm clearance
+    Module 2 (V3): 16mm Heavy-Duty Support-Free Bridge Deck matching V3 Front-Slide Portal Tenons
     """
     mb = MeshBuilder()
-    pocket_half = p.mac_w / 2.0 + p.mac_side_clearance
-    pocket_cr = p.mac_corner_r + p.mac_side_clearance
-    outer_half = pocket_half + p.wall_thickness
-    outer_cr = pocket_cr + p.wall_thickness
-
-    r_bolt = p.rs30_bolt_hole_d / 2.0          # 3.5 mm
-    r_cone_bot = 13.5                          # Ø27 mm thumbscrew access at z=0 -> 45° cone to (3.5, 10.0)
+    r_bolt = p.rs30_bolt_hole_d / 2.0
+    r_cone_bot = 13.5
     z_cone_top = 10.0
-    r_seat = p.rs30_seat_d / 2.0               # 99.2 mm
-    r_lip_out = p.rs30_lip_outer_d / 2.0       # 103.5 mm (< outer_half = 107.2 mm everywhere)
+    r_seat = p.rs30_seat_d / 2.0
+    r_lip_out = p.rs30_lip_outer_d / 2.0
 
-    z_seat = p.deck_seat_z                     # 16.0 mm
-    z_lip_top = p.deck_lip_top_z               # 20.0 mm
-    z_outer = p.deck_outer_z                   # 15.0 mm (stepped 1mm below RS30 turntable!)
-    z_m_wall = p.tenon_h + 0.5                 # 8.5 mm mortise vertical wall height
+    z_seat = p.deck_seat_z
+    z_lip_top = p.deck_lip_top_z
+    z_outer = p.deck_outer_z
+    z_m_wall = p.tenon_h + 0.5
 
     thetas = [2.0 * math.pi * k / p.n_angles for k in range(p.n_angles)]
-    sector_types = [1 if is_corner_slice(k, p.n_angles, p.corner_half_steps) else 0 for k in range(p.n_angles)]
+    sector_types = [1 if is_v3_pillar_slice(k, p.n_angles) else 0 for k in range(p.n_angles)]
 
     def mortise_radii(theta: float) -> tuple[float, float, float, float, float]:
-        r_out = rounded_square_radius(theta, outer_half, outer_cr)
-        r_pock = rounded_square_radius(theta, pocket_half, pocket_cr)
+        _, r_pock, r_out = v3_radii(theta, p)
         r_m_in = r_pock + (p.tenon_inset - p.tenon_tol)
         r_m_out = r_out - (p.tenon_inset - p.tenon_tol)
         r_m_mid = 0.5 * (r_m_in + r_m_out)
-        z_m_peak = z_m_wall + 0.5 * (r_m_out - r_m_in)
+        z_m_peak = min(z_outer - 1.2, z_m_wall + 0.5 * (r_m_out - r_m_in))
         return r_out, r_m_in, r_m_mid, r_m_out, z_m_peak
 
     def profile_fn(theta: float, st: int) -> list[tuple[float, float]]:
@@ -344,23 +347,13 @@ def build_module2_upper_deck(p: DockParams) -> MeshBuilder:
         ]
         if st == 0:
             return [
-                (r_bolt, z_cone_top),
-                (r_cone_bot, 0.0),
-                (r_m_in, 0.0),
-                (r_m_mid, 0.0),
-                (r_m_out, 0.0),
-                (r_out, 0.0),
+                (r_bolt, z_cone_top), (r_cone_bot, 0.0),
+                (r_m_in, 0.0), (r_m_mid, 0.0), (r_m_out, 0.0), (r_out, 0.0),
                 *top_chain,
             ]
         return [
-            (r_bolt, z_cone_top),
-            (r_cone_bot, 0.0),
-            (r_m_in, 0.0),
-            (r_m_in, z_m_wall),
-            (r_m_mid, z_m_peak),
-            (r_m_out, z_m_wall),
-            (r_m_out, 0.0),
-            (r_out, 0.0),
+            (r_bolt, z_cone_top), (r_cone_bot, 0.0),
+            (r_m_in, 0.0), (r_m_in, z_m_wall), (r_m_mid, z_m_peak), (r_m_out, z_m_wall), (r_m_out, 0.0), (r_out, 0.0),
             *top_chain,
         ]
 
@@ -371,28 +364,10 @@ def build_module2_upper_deck(p: DockParams) -> MeshBuilder:
         def v(r: float, z: float) -> int:
             return builder.add_vert(r * ct, r * st_sin, z)
 
-        # When transitioning st_prev=0 (solid) -> st_curr=1 (hollow mortise), normal points into +theta (into mortise)
-        # Check orientation: in (r, z) plane with e_r = outward, e_z = up, e_r x e_z = -e_theta!
-        # Let's match build_module1_base_cradle where (a0, a1, b2) = (r_in@z0, r_out@z0, r_out@z1) had flip=(st_prev==1 and st_curr==0)
-        # Wait: in Module 2, st==0 HAS material inside the mortise region, whereas st==1 is HOLLOW inside the mortise region!
-        # That is the EXACT OPPOSITE of Module 1 (where st==1 had material and st==0 was open air)!
-        # Therefore flip here is (st_prev == 0 and st_curr == 1)!
         flip = (st_prev == 0 and st_curr == 1)
-
-        b0 = v(r_m_in, 0.0)
-        b1 = v(r_m_mid, 0.0)
-        b2 = v(r_m_out, 0.0)
-        w0 = v(r_m_in, z_m_wall)
-        wp = v(r_m_mid, z_m_peak)
-        w2 = v(r_m_out, z_m_wall)
-
-        tris_ccw = [
-            (b0, b1, wp),
-            (b0, wp, w0),
-            (b1, b2, w2),
-            (b1, w2, wp),
-        ]
-        for t in tris_ccw:
+        b0, b1, b2 = v(r_m_in, 0.0), v(r_m_mid, 0.0), v(r_m_out, 0.0)
+        w0, wp, w2 = v(r_m_in, z_m_wall), v(r_m_mid, z_m_peak), v(r_m_out, z_m_wall)
+        for t in ((b0, b1, wp), (b0, wp, w0), (b1, b2, w2), (b1, w2, wp)):
             builder.add_tri(t[0], t[1], t[2]) if not flip else builder.add_tri(t[0], t[2], t[1])
 
     mb.revolve_sector_profiles(thetas, sector_types, profile_fn, cheek_triangulator)
@@ -409,10 +384,6 @@ def build_annular_box_cage(
     window_half_steps: int = 8,
     n_angles: int = 128,
 ) -> MeshBuilder:
-    """
-    Module 3 (V2): Side-Mounted Ventilated Power Brick Pod (sits alongside Mac Studio's blank Left/Right side
-    so Mac Studio's -Y rear ports and 4000+ exhaust holes stay 100% unobstructed).
-    """
     mb = MeshBuilder()
     oh_x, oh_y = outer_w / 2.0, outer_d / 2.0
     ih_x, ih_y = oh_x - wall, oh_y - wall
@@ -458,12 +429,12 @@ def build_annular_box_cage(
 
 def build_module4_dust_filter_frame(p: DockParams) -> MeshBuilder:
     mb = MeshBuilder()
-    half_w, cr, r_hole, r_lip, h_total, h_lip, n = 92.0, 22.0, 82.0, 86.0, 3.2, 1.6, 128
+    half_w, cr, r_hole, r_lip, h_total, h_lip, n = 90.0, 18.0, 82.0, 86.0, 3.2, 1.6, 128
     thetas = [2.0 * math.pi * k / n for k in range(n)]
     sector_types = [0] * n
 
     def profile_fn(theta: float, _st: int) -> list[tuple[float, float]]:
-        ro = rounded_square_radius(theta, half_w, cr)
+        ro = asym_rounded_square_radius(theta, half_w, cr, cr)
         return [(r_hole, 0.0), (ro, 0.0), (ro, h_total), (r_lip, h_total), (r_lip, h_lip), (r_hole, h_lip)]
 
     mb.revolve_sector_profiles(thetas, sector_types, profile_fn, lambda *_: None)
@@ -476,36 +447,43 @@ def main() -> None:
     params = DockParams()
 
     modules = [
-        ("01_mac_studio_base_cradle.stl", "StudioBeam V2 M1 Base Cradle", build_module1_base_cradle(params)),
-        ("02_rs30_gimbal_upper_deck.stl", "StudioBeam V2 M2 Heavy-Duty Deck", build_module2_upper_deck(params)),
+        ("01_mac_studio_base_cradle.stl", "StudioBeam V3 Front-Slide Cradle", build_module1_base_cradle(params)),
+        ("02_rs30_gimbal_upper_deck.stl", "StudioBeam V3 16mm Bridge Deck", build_module2_upper_deck(params)),
         (
             "03_power_brick_cable_pod.stl",
-            "StudioBeam V2 M3 Side Power Pod",
-            # Oriented along Y (depth 204mm, width 60mm) to sit flush beside Mac Studio's blank Left/Right wall!
+            "StudioBeam V3 Side Power Pod",
             build_annular_box_cage(
-                outer_w=params.brick_t + 16.0,   # 60.0 mm (X width)
-                outer_d=params.brick_w + 16.0,   # 204.0 mm (Y depth, matching 214mm M1 side!)
+                outer_w=params.brick_t + 16.0,
+                outer_d=params.brick_w + 16.0,
                 outer_cr=14.0,
                 wall=6.0,
-                height=params.brick_h + 10.0,    # 102.0 mm (< 131mm M2 height, 45mm below RS30!)
+                height=params.brick_h + 10.0,
                 floor_h=8.0,
             ),
         ),
-        ("04_bottom_dust_filter_frame.stl", "StudioBeam V2 M4 Dust Filter Frame", build_module4_dust_filter_frame(params)),
+        ("04_bottom_dust_filter_frame.stl", "StudioBeam V3 Dust Filter Frame", build_module4_dust_filter_frame(params)),
     ]
 
+    # Verify exact slide-in clearance at front portal (theta = 43° and 137°)
+    t_front_edge = math.radians(43.0)
+    r_rail_43, r_pock_43, _ = v3_radii(t_front_edge, params)
+    front_portal_clear_w = round(2.0 * r_pock_43 * math.cos(t_front_edge), 2)
+    front_foot_channel_w = round(2.0 * r_rail_43 * math.cos(t_front_edge), 2)
+    t_rear_edge = math.radians(232.0)
+    _, r_pock_232, _ = v3_radii(t_rear_edge, params)
+    rear_port_window_w = round(2.0 * abs(r_pock_232 * math.cos(t_rear_edge)), 2)
+
     report = {
-        "version": "2.0-structural-clearance-verified",
+        "version": "3.0-front-slide-cassette-portal",
         "parameters_mm": asdict(params),
         "engineering_verification": {
+            "front_slide_in_portal_width_mm": front_portal_clear_w,
+            "mac_studio_body_width_mm": params.mac_w,
+            "front_foot_channel_width_mm": front_foot_channel_w,
+            "mac_studio_foot_diameter_mm": params.mac_intake_d,
+            "rear_port_and_power_btn_window_mm": rear_port_window_w,
             "rs30_mass_kg": 5.4,
-            "design_load_3x_sf_kg": 16.2,
-            "pillar_total_area_mm2": 2080,
             "deck_solid_bridge_thickness_mm": params.deck_seat_z,
-            "estimated_petg_deflection_mm": 0.04,
-            "rs30_360_swept_radius_mm": params.rs30_swept_r,
-            "scheme_a_rear_port_clearance": "100% open (-Y unobstructed; Power Pod moved to blank -X/+X side)",
-            "scheme_a_u_arm_360_clearance": "100% open (outer deck corners stepped 1mm below turntable seat)",
             "scheme_c_min_360_gap_mm": round(params.side_by_side_dx - (params.mac_w / 2 + params.mac_side_clearance + params.wall_thickness) - params.rs30_swept_r, 1),
         },
         "modules": {},
@@ -526,6 +504,9 @@ def main() -> None:
         total_fdm_g += stats["mass_petg_fdm_g"]
         total_solid_g += stats["mass_jlc_solid_petg_g"]
         total_sls_g += stats["mass_sls_pa12_g"]
+
+    assert front_portal_clear_w >= params.mac_w + 2.0, f"Front portal too narrow: {front_portal_clear_w}"
+    assert front_foot_channel_w >= params.mac_intake_d + 2.0, f"Foot channel too narrow: {front_foot_channel_w}"
 
     report["totals"] = {
         "total_fdm_petg_30pct_infill_g": round(total_fdm_g, 1),
